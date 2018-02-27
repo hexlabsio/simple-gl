@@ -1,0 +1,27 @@
+{
+  "name": "simple-gl",
+  "version": "1.0.0-BETA",
+  "description": "Simple Wrapper for WebGL",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobjamin/simple-gl.git"
+  },
+  "keywords": [
+    "webgl"
+  ],
+  "author": "Chris Barbour",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bobjamin/simple-gl/issues"
+  },
+  "homepage": "https://github.com/bobjamin/simple-gl#readme",
+  "devDependencies": {
+    "typescript": "^2.7.2"
+  }
+}
