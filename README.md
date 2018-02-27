@@ -8,45 +8,18 @@ npm install -S simple-gl
 ```
 
 ```typescript
-import { GLProgram, AttributeType, webGlContextFrom } from 'simple-gl'
+import { GLScene,  GLCircle, GLObject, GLProgram, AttributeType, webGlContextFrom, Vertex, Vector2D } from 'simple-gl'
 
-(function(){
-    let attributes = new Map()
-    attributes.set("a_position", { type: AttributeType.ARRAY_BUFFER, mapper: GLProgram.vertexPointers(2) });
-    attributes.set("a_color", { type: AttributeType.ARRAY_BUFFER, mapper: GLProgram.vertexPointers(4) });
+let vertexShader = require('./src/vertex-shader.glsl');
+let fragmentShader = require('./src/fragment-shader.glsl');
 
-    let program = new GLProgram(
+(() => {
+    let scene = new GLScene(
         webGlContextFrom(document.getElementById('display') as HTMLCanvasElement),
-        (document.getElementById('vertex-shader') as HTMLScriptElement).text,
-        (document.getElementById('fragment-shader') as HTMLScriptElement).text,
-        attributes
+        vertexShader,
+        fragmentShader,
+        [new GLCircle(100, 0.5,new Vertex(new Vector2D((Math.random()*2-1)*10,(Math.random()*2-1)*10)))]
     )
-    program.setViewportDefaults();
-    
-    var r1 = Math.random();
-    var b1 = Math.random();
-    var g1 = Math.random();
-    program.updateInput("a_color", [ r1, b1, g1, 1,
-        r1, b1, g1, 1,
-        r1, b1, g1, 1,
-        r1, b1, g1, 1,
-        r1, b1, g1, 1,
-        r1, b1, g1, 1])
-    var x = 0
-    setInterval(
-        function(){
-            
-            program.updateInput("a_position", [
-                x, 0,
-                x, 0.5,
-                0.7 + x, 0,
-                x, 0.6,
-                x, 1.1,
-                0.7 + x, 0.6,
-              ])
-              
-            program.render(6)
-            //x += 0.001
-        }, 1);
+    setInterval( () => scene.render(), 1)
 })()
 ```
