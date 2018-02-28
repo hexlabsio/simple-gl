@@ -7,9 +7,9 @@ export default class GLScene{
     objects: Array<GLObject>
     program: GLProgram
     
-    constructor(webGlContext: WebGLRenderingContext, vertexShader: string, fragmentShader: string, objects: Array<GLObject>){
+    constructor(webGlContext: WebGLRenderingContext, vertexShader: string, fragmentShader: string, objects: Array<GLObject>, uniforms: Map<string, any>){
         this.objects = objects
-        this.program = new GLProgram(webGlContext, vertexShader, fragmentShader, Vertex.attributeMappings())
+        this.program = new GLProgram(webGlContext, vertexShader, fragmentShader, Vertex.attributeMappings(),uniforms)
     }
 
     render(){
