@@ -14,6 +14,7 @@ jobs:
             - yarn-cache-{{ .Branch }}
             - yarn-cache-
       - run: yarn install
+      - run: yarn start build
       - save_cache:
           key: yarn-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: node_modules
@@ -38,7 +39,8 @@ jobs:
       - attach_workspace:
           at: ~/simple-gl
       - run: yarn install
-      - run: yarn start release || true
+      - run: yarn start build
+      - run: npm publish
 workflows:
   version: 2
   test_and_release:
