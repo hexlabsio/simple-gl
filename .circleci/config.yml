@@ -29,7 +29,7 @@ jobs:
       - attach_workspace:
           at: ~/simple-gl
       - run: npm test
-      - run: mkdir -p test-results/simple-gl-tests && mv test-results.xml test-results/simple-gl-tests
+      - run: mkdir -p test-results && mv test-results.xml test-results
       - store_test_results:
           path: test-results
   release:
