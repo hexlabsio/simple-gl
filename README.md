@@ -1,5 +1,5 @@
-# simple-gl
-Simple WebGL Wrapper [![CircleCI](https://circleci.com/gh/bobjamin/simple-gl/tree/master.svg?style=svg)](https://circleci.com/gh/bobjamin/simple-gl/tree/master)
+# simple-gl [![CircleCI](https://circleci.com/gh/bobjamin/simple-gl/tree/master.svg?style=svg)](https://circleci.com/gh/bobjamin/simple-gl/tree/master)
+Simple WebGL Wrapper 
 
 
 # Usage
