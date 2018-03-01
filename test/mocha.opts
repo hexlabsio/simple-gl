@@ -1,0 +1,4 @@
+--ui mocha-typescript
+--require source-map-support/register
+dist/test/vector-test.js
+dist/test/matrix-test.js

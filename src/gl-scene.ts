@@ -1,4 +1,4 @@
-import GLObject from "./gl-object"
+import GLObject, { GLOptimizedType } from "./gl-object"
 import GLProgram from "./gl-program"
 import Vertex from "./vertex"
 import { AttributeType } from "./attribute-info"
@@ -13,21 +13,27 @@ export default class GLScene{
     }
 
     render(){
-        let verticies = flatMap(this.objects, (object: GLObject) => object.verticies())
-        let attributeValues = new Map<string, number[]>()
-        verticies.forEach(
-            (vertex: Vertex) => vertex.attributeValues().forEach( 
-                (value, key) => {
-                    let floats = []
-                    if(attributeValues.has(key)) floats = attributeValues.get(key)
-                    floats = floats.concat(value)
-                    attributeValues.set(key, floats)
-                }
-            )
-        )
         this.program.setViewportDefaults()
-        attributeValues.forEach((value, key) =>  this.program.updateInput(key, value))
-        this.program.render(verticies.length)
+        this.objects.forEach(
+            (object: GLObject) => {
+                let verticies = object.verticies()
+                let attributeValues = new Map<string, number[]>()
+                verticies.forEach(
+                    (vertex: Vertex) => {
+                        vertex.attributeValues().forEach(
+                            (value, key) => {
+                                let floats = []
+                                if(attributeValues.has(key)) floats = attributeValues.get(key)
+                                floats = floats.concat(value)
+                                attributeValues.set(key, floats)
+                            }
+                        )
+                    }
+                )
+                attributeValues.forEach((value, key) =>  this.program.updateInput(key, value))
+                this.program.render(object.optimizedType(), verticies.length)
+            }
+        )
     }
 }
 

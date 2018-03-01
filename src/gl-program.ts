@@ -45,6 +45,7 @@ export default class GLProgram{
                 let position = gl.getAttribLocation(program, name);
                 let buffer = gl.createBuffer()
                 gl.bindBuffer(info.type, buffer);
+                gl.enableVertexAttribArray(position)
                 attributeInfo.set(name, new AttributeInfo(name,position,info.type,buffer,info.mapper))
             }
         )
@@ -110,7 +111,7 @@ export default class GLProgram{
   updateInput(name: string, data: number[]){
     let attributeInfo = this.attributeInfo.get(name);
     this.gl.bindBuffer(attributeInfo.type, attributeInfo.buffer)
-    this.gl.bufferData(attributeInfo.type, new Float32Array(data), this.gl.STATIC_DRAW);
+    this.gl.bufferData(attributeInfo.type, new Float32Array(data), WebGLRenderingContext.DYNAMIC_DRAW);
   }
 
   updateUniform<T>(name: string, data: T){
@@ -118,22 +119,33 @@ export default class GLProgram{
     this.gl.useProgram(this.program)
     uniformInfo.mapper(this.gl,uniformInfo.position, data)
   }
-  
-  render(vertextCount: number){
-    this.gl.clearColor(0, 0, 0, 0)
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+
+  stageProgram(){
     this.gl.useProgram(this.program)
-    let program = this
-    this.attributeInfo.forEach(
-        (info, name) => {
-            program.gl.enableVertexAttribArray(info.position)
-            program.gl.bindBuffer(info.type, info.buffer)
-            info.mapper(program.gl, info.position)
-        }
-    )
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, vertextCount)
   }
 
+  clear(r: number, g: number, b: number, t: number){
+    this.gl.clearColor(r, g, b, t)
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+  }
 
-  static vertexPointers = (size: number) =>  (gl,position) => gl.vertexAttribPointer(position, size, gl.FLOAT, false, 0, 0)
+  render(type, vertexCount: number){
+    this.attributeInfo.forEach(
+        (info, name) => {
+            this.gl.bindBuffer(info.type, info.buffer)
+            info.mapper(this.gl, info.position)
+        }
+    )
+    this.gl.drawArrays(type, 0, vertexCount)
+  }
+  
+  renderTriangles(vertextCount: number){
+    this.render(WebGLRenderingContext.TRIANGLES, vertextCount)
+  }
+
+  renderFan(vertextCount: number){
+    this.render(WebGLRenderingContext.TRIANGLE_FAN, vertextCount)
+  }
+
+  static vertexPointers = (size: number) =>  (gl,position) => gl.vertexAttribPointer(position, size, WebGLRenderingContext.FLOAT, false, 0, 0)
 }
