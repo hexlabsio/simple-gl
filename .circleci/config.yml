@@ -43,10 +43,10 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-      - checkout_code
+      - install
       - test:
           requires:
-            - checkout_code
+            - install
       - hold:
           type: approval
           requires:
