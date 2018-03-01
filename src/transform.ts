@@ -1,5 +1,5 @@
 import { Matrix3 } from "./matrix";
-import { Vector2D } from "..";
+import { Vector2D } from "./vector";
 
 export class Transform2D{
     _scale: Vector2D = new Vector2D(1,1)

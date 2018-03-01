@@ -29,8 +29,9 @@ jobs:
       - attach_workspace:
           at: ~/simple-gl
       - run: npm test
+      - run: mkdir -p test-results && mv test-results.xml test-results
       - store_test_results:
-          path: test-results.xml
+          path: test-results
   release:
     docker:
       - image: circleci/node:7.10
