@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  checkout_code:
+  install:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/simple-gl
