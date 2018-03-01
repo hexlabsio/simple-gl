@@ -28,7 +28,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/simple-gl
-      - run: npm install
       - run: npm test
   release:
     docker:
@@ -37,9 +36,9 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/simple-gl
-      - run: ls -ltr
       - run: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-      - run: npm publish
+      - run: cp package.json dist
+      - run: cd dist && npm publish
 workflows:
   version: 2
   test_and_release:
