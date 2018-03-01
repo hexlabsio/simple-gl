@@ -6,11 +6,6 @@ import { Matrix3 } from "../src/matrix";
 @suite
 class MatrixTest {
 
-    testMatrix = new Matrix3(
-        1,2,3,
-        4,5,6,
-        7,8,9
-    )
 
     @test identity() {
         expect(Matrix3.identity()).to.deep.equal(
@@ -23,21 +18,21 @@ class MatrixTest {
     }
 
     @test translation() {
-        expect(this.testMatrix.translate(new Vector2D(10,-5))).to.deep.equal(
+        expect(Matrix3.identity().translate(new Vector2D(10,-5)).translate(new Vector2D(6,3))).to.deep.equal(
             new Matrix3(
-                1,2,3,
-                4,5,21,
-                7,8,39
+                1,0,16,
+                0,1,-2,
+                0,0,1
             )
         )
     }
 
     @test scale() {
-        expect(this.testMatrix.scale(new Vector2D(10,-5))).to.deep.equal(
+        expect(Matrix3.identity().scale(new Vector2D(10,-5)).scale(new Vector2D(2,0.1))).to.deep.equal(
             new Matrix3(
-                10,-10,3,
-                40,-25,6,
-                70,-40,9
+                20,0,0,
+                0,-0.5,0,
+                0,0,1
             )
         )
     }
