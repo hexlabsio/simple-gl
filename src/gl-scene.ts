@@ -16,7 +16,7 @@ export default class GLScene{
         this.program.setViewportDefaults()
         this.objects.forEach(
             (object: GLObject) => {
-                let verticies = object.verticies()
+                let verticies = object.transformedVerticies()
                 let attributeValues = new Map<string, number[]>()
                 verticies.forEach(
                     (vertex: Vertex) => {
