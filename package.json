@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "pretest": "tsc",
+    "build": "rm -rf dist && tsc",
+    "pretest": "rm -rf dist && tsc",
     "test": "mocha"
   },
   "repository": {
