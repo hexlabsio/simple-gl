@@ -1,6 +1,6 @@
 {
   "name": "simple-gl",
-  "version": "1.0.0-BETA",
+  "version": "1.0.0",
   "description": "Simple Wrapper for WebGL",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,45 +1,62 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
-  dependencies:
-    pre:
-      - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-  build:
+  checkout_code:
     docker:
-      # specify the version you desire here
       - image: circleci/node:7.10
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+    working_directory: ~/simple-gl
     steps:
       - checkout
-
-      # Download and cache dependencies
+      - attach_workspace:
+          at: ~/simple-gl
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+            - yarn-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-cache-{{ .Branch }}
+            - yarn-cache-
       - run: yarn install
-
       - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
+          key: yarn-cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths: node_modules
+      - run: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+      - persist_to_workspace:
+          root: .
+          paths: .
+  test:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/simple-gl
+    steps:
+      - attach_workspace:
+          at: ~/simple-gl
+      - run: yarn install
       - run: yarn test
-  deployment:
-    npm:
-      tag: /v[0-9]+(\.[0-9]+)*/
-      commands:
-        - npm publish
+  release:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/simple-gl
+    steps:
+      - attach_workspace:
+          at: ~/simple-gl
+      - run: yarn install
+      - run: yarn start release || true
+workflows:
+  version: 2
+  test_and_release:
+    jobs:
+      - checkout_code
+      - test:
+          requires:
+            - checkout_code
+      - hold:
+          type: approval
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - release:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master
