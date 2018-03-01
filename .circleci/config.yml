@@ -18,7 +18,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm run build
-      - run: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
       - persist_to_workspace:
           root: .
           paths: .
@@ -38,6 +37,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/simple-gl
+      - run: ls -ltr
+      - run: 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
       - run: npm publish
 workflows:
   version: 2
