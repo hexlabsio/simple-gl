@@ -5,15 +5,13 @@ import { AttributeType } from "./attribute-info"
 
 export default class GLScene{
     objects: Array<GLObject>
-    program: GLProgram
     
-    constructor(webGlContext: WebGLRenderingContext, vertexShader: string, fragmentShader: string, objects: Array<GLObject>, uniforms: Map<string, any>){
+    constructor(objects: Array<GLObject>){
         this.objects = objects
-        this.program = new GLProgram(webGlContext, vertexShader, fragmentShader, Vertex.attributeMappings(),uniforms)
     }
 
-    render(){
-        this.program.setViewportDefaults()
+    render(program: GLProgram){
+        program.setViewportDefaults()
         this.objects.forEach(
             (object: GLObject) => {
                 let verticies = object.transformedVerticies()
@@ -30,15 +28,9 @@ export default class GLScene{
                         )
                     }
                 )
-                attributeValues.forEach((value, key) =>  this.program.updateInput(key, value))
-                this.program.render(object.optimizedType(), verticies.length)
+                attributeValues.forEach((value, key) =>  program.updateInput(key, value))
+                program.render(object.optimizedType(), verticies.length)
             }
         )
     }
-}
-
-function flatMap<T, R>(array: Array<T>, f: (item: T) => Array<R>): Array<R> {
-    return array.reduce((ys: Array<R>, x: T) => {
-        return ys.concat(f(x))
-    }, [])
 }

@@ -4,7 +4,7 @@ import UniformInfo from './uniform-info';
 export default class GLProgram{
 
     gl: WebGLRenderingContext
-    program: any
+    program: WebGLProgram
     attributeInfo: Map<string, AttributeInfo>
     uniformInfo: Map<string, UniformInfo<any>>
 
@@ -22,12 +22,10 @@ export default class GLProgram{
     }
 
     private configureUniforms(uniforms: Map<string, {mapper: (webGlContext: WebGLRenderingContext, position: number, data: any) => void}>): Map<string, UniformInfo<any>>{
-        let gl = this.gl
         let uniformInfo = new Map<string, UniformInfo<any>>()
-        let program = this.program
         uniforms.forEach(
             (info, name) => {
-                let position = gl.getUniformLocation(program, name);
+                let position = this.gl.getUniformLocation(this.program, name);
                 uniformInfo.set(name, new UniformInfo(name, position, info.mapper))
             }
         )
@@ -37,15 +35,13 @@ export default class GLProgram{
     private configureAttributes(
         attributes: Map<string, {type: AttributeType, mapper: (webGlContext: WebGLRenderingContext, position: WebGLUniformLocation) => void}>,
     ): Map<string, AttributeInfo>{
-        let gl = this.gl
         let attributeInfo = new Map<string, AttributeInfo>()
-        let program = this.program
         attributes.forEach(
             (info, name) => {
-                let position = gl.getAttribLocation(program, name);
-                let buffer = gl.createBuffer()
-                gl.bindBuffer(info.type, buffer);
-                gl.enableVertexAttribArray(position)
+                let position = this.gl.getAttribLocation(this.program, name);
+                let buffer = this.gl.createBuffer()
+                this.gl.bindBuffer(info.type, buffer);
+                this.gl.enableVertexAttribArray(position)
                 attributeInfo.set(name, new AttributeInfo(name,position,info.type,buffer,info.mapper))
             }
         )
