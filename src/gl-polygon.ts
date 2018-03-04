@@ -7,6 +7,7 @@ export default class GLPolygon extends GLObject{
 
     constructor(vertices: number, radius: number, center: Vector2D){
         super()
+        this.position = center
         let rotation = 2.0 * Math.PI / vertices
         var direction = new Vector2D(1,0)
         let start = new Vector2D(center.x + direction.x * radius, center.y + direction.y * radius)

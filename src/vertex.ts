@@ -4,8 +4,9 @@ import { AttributeType } from "./attribute-info"
 export default class Vertex{
     position: Vector2D
     color: number[] = [0,0,0, 1]
-    constructor(position: Vector2D){
+    constructor(position: Vector2D, color: number[] = [0,0,0, 1]){
        this.position = position
+       this.color = color
     }
     attributeValues(): Map<string, number[]>{
         let attributes = new Map<string, number[]>()

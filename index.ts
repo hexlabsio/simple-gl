@@ -19,17 +19,6 @@ export function webGlContextFrom(canvas: HTMLCanvasElement): WebGLRenderingConte
     return gl;
 }
 
-export function aspect(fieldOfViewInRadians: number, width: number, height: number): number[]{
-    let f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
-    let aspect = width/height
-     return [
-      f/aspect, 0, 0, 0,
-      0, f, 0, 0,
-      0, 0, 1, 0,
-      0, 0,0 , 1
-    ];
-  }
-
 interface Array<T> {
     flatMap<E>(callback: (t: T) => Array<E>): Array<E>
 }

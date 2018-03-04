@@ -18,6 +18,15 @@ export class Matrix3{
         return new Vector2D(this.a*vector.x + this.b * vector.y + this.c, this.d*vector.x + this.e*vector.y + this.f)
     }
 
+    matrix4Floats(): number[]{
+        return [
+            this.a, this.b, this.c, 0,
+            this.d, this.e, this.f, 0,
+            this.g, this.h, this.i, 0,
+            0,0,0,1
+        ]
+    }
+
     static multiply(a: Matrix3, b: Matrix3): Matrix3{
         return new Matrix3(
             a.a*b.a+a.b*b.d+a.c*b.g, a.a*b.b+a.b*b.e+a.c*b.h, a.a*b.c+a.b*b.f+a.c*b.i,
@@ -45,6 +54,15 @@ export class Matrix3{
             1,0,0,
             0,1,0,
             0,0,1
+        )
+    }
+    static aspect(fieldOfViewInRadians: number, width: number, height: number): Matrix3{
+        let f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+        let aspect = width/height
+        return new Matrix3(
+            -f/aspect, 0, 0,
+            0, f, 0,
+            0, 0, 1
         )
     }
 }
