@@ -44,7 +44,7 @@ export class Matrix3{
         return new Matrix3(
             (T.e*T.i-T.h*T.f), -(T.d*T.i-T.g*T.f), (T.d*T.h-T.g*T.e),
             -(T.b*T.i-T.h*T.c), (T.a*T.i-T.g*T.c), -(T.a*T.h-T.g*T.b),
-            (T.b*T.i-T.h*T.c), -(T.a*T.f-T.d*T.c), (T.a*T.e-T.d*T.b)
+            (T.b*T.f-T.e*T.c), -(T.a*T.f-T.d*T.c), (T.a*T.e-T.d*T.b)
         )
     }
 

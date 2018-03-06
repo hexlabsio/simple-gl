@@ -43,4 +43,58 @@ class MatrixTest {
         expect(transformationMatrix.transform(vector)).to.deep.equal(new Vector2D(1.5,14))
     }
 
+    @test transpose() {
+        let M = new Matrix3(
+            1,2,3,
+            4,5,6,
+            7,8,9
+        )
+        expect(M.transpose()).to.deep.equal(
+            new Matrix3(
+                1,4,7,
+                2,5,8,
+                3,6,9
+            )
+        )
+    }
+
+    @test determinant() {
+        let M = new Matrix3(
+            1,2,3,
+            0,1,4,
+            5,6,0
+        )
+        expect(M.determinant()).to.equal(1)
+    }
+
+    @test adjugate() {
+        let M = new Matrix3(
+            1,2,3,
+            0,1,4,
+            5,6,0
+        )
+        expect(M.adjugate()).to.deep.equal(
+            new Matrix3(
+                -24, 18, 5,
+                20,-15,-4,
+                -5,4,1
+            )
+        )
+    }
+
+    @test inverse() {
+        let M = new Matrix3(
+            1,2,3,
+            0,1,4,
+            5,6,0
+        )
+        let MInverse = new Matrix3(
+            -24, 18, 5,
+            20,-15,-4,
+            -5,4,1
+        )
+        expect(M.inverse()).to.deep.equal(MInverse)
+        expect(MInverse.multiply(M)).to.deep.equal(Matrix3.identity())
+    }
+
 }
