@@ -27,6 +27,40 @@ export class Matrix3{
         ]
     }
 
+    determinant(): number{
+        return this.a*(this.e*this.i-this.h*this.f)-this.b*(this.d*this.i-this.g*this.f)+this.c*(this.d*this.h-this.g*this.e)
+    }
+
+    transpose(): Matrix3{
+        return new Matrix3(
+            this.a, this.d, this.g,
+            this.b, this.e, this.h,
+            this.c, this.f, this.i
+        )
+    }
+
+    adjugate(): Matrix3{
+        let T = this.transpose()
+        return new Matrix3(
+            (T.e*T.i-T.h*T.f), -(T.d*T.i-T.g*T.f), (T.d*T.h-T.g*T.e),
+            -(T.b*T.i-T.h*T.c), (T.a*T.i-T.g*T.c), -(T.a*T.h-T.g*T.b),
+            (T.b*T.i-T.h*T.c), -(T.a*T.f-T.d*T.c), (T.a*T.e-T.d*T.b)
+        )
+    }
+
+    inverse(): Matrix3{
+        let determinant = this.determinant()
+        if(determinant != 0){
+            let adjugate = this.adjugate()
+            return new Matrix3(
+                adjugate.a/determinant, adjugate.b/determinant, adjugate.c/determinant,
+                adjugate.d/determinant, adjugate.e/determinant, adjugate.f/determinant,
+                adjugate.g/determinant, adjugate.h/determinant, adjugate.i/determinant
+            )
+        }
+        else return Matrix3.identity()
+    }
+
     static multiply(a: Matrix3, b: Matrix3): Matrix3{
         return new Matrix3(
             a.a*b.a+a.b*b.d+a.c*b.g, a.a*b.b+a.b*b.e+a.c*b.h, a.a*b.c+a.b*b.f+a.c*b.i,

@@ -1,29 +1,72 @@
 import Vertex from './vertex'
-import { Transform2D } from './transform';
-import { Vector2D } from '..';
+import { Transform2D } from './transform'
+import { Vector2D } from './vector'
+import GLProgram from './gl-program'
 
 export enum GLOptimizedType{
     TRIANGLES = WebGLRenderingContext.TRIANGLES,
     TRIANGLE_FAN = WebGLRenderingContext.TRIANGLE_FAN,
-    LINES =  WebGLRenderingContext.LINES
+    LINES =  WebGLRenderingContext.LINES,
+    LINE_STRIP = WebGLRenderingContext.LINE_STRIP
 }
 
 export default abstract class GLObject{
     transform: Transform2D = new Transform2D()
     position: Vector2D = new Vector2D(0,0)
+    lineColor: number[] = [0,0,0,0.2]
+    _cachedPosition: Vector2D
+    _cachedVerticies: Array<Vertex>
     abstract verticies(): Array<Vertex>
+    lines(): number[]{ return [] }
     optimizedType(): GLOptimizedType { return GLOptimizedType.TRIANGLES }
     setColor(color: number[]){
         this.verticies().forEach((vertex: Vertex) => vertex.color = color)
     }
     transformedPosition(): Vector2D{
-        let transformationMatrix = this.transform.transform()
-        return this.transform.transform().transform(this.position)
+        //if(this.transform.changed){
+            let transformationMatrix = this.transform.transform()
+            this._cachedPosition = this.transform.transform().transform(this.position)
+        //}
+        return this._cachedPosition
     }
     transformedVerticies(): Array<Vertex>{
-        let transformationMatrix = this.transform.transform()
-        return this.verticies().map(
-            (vertex: Vertex) => new Vertex(transformationMatrix.transform(vertex.position),vertex.color)
+        //if(this.transform.changed || !this._cachedVerticies){
+            let transformationMatrix = this.transform.transform()
+            this._cachedVerticies = this.verticies().map(
+                (vertex: Vertex) => new Vertex(transformationMatrix.transform(vertex.position),vertex.color)
+            )
+        //}
+        return this._cachedVerticies
+    }
+
+    render(program: GLProgram){
+        let verticies = this.transformedVerticies()
+        this.renderWith(verticies, this.optimizedType(), program)
+        let lines = this.lines()
+        if(lines.length > 1){
+            this.renderWith(
+                this.lines().map(
+                    (index: number)=> new Vertex(verticies[index].position, this.lineColor)
+                ),
+            GLOptimizedType.LINE_STRIP, program)
+        }
+    }
+
+    renderWith(verticies: Array<Vertex>, type: GLOptimizedType, program: GLProgram){
+        let attributeValues = new Map<string, number[]>()
+        verticies.forEach(
+            (vertex: Vertex) => {
+                vertex.attributeValues().forEach(
+                    (value, key) => {
+                        let floats = []
+                        if(attributeValues.has(key)) floats = attributeValues.get(key)
+                        floats = floats.concat(value)
+                        attributeValues.set(key, floats)
+                    }
+                )
+            }
         )
+        attributeValues.forEach((value, key) =>  program.updateInput(key, value))
+        program.render(type, verticies.length)
     }
 }

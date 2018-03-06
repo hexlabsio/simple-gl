@@ -9,6 +9,7 @@ export { Matrix3 } from './src/matrix'
 export { Transform2D } from './src/transform'
 export { default as GLTriangle } from './src/gl-triangle'
 export { default as GLPolygon } from './src/gl-polygon'
+export { default as GLLine } from './src/gl-line'
 
 export function webGlContextFrom(canvas: HTMLCanvasElement): WebGLRenderingContext{
     let gl = canvas.getContext('webgl')
