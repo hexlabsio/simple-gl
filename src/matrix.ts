@@ -1,4 +1,4 @@
-import { Vector2D } from "./vector";
+import { Vector2D, Vector3D } from "./vector";
 
 export class Matrix3{
     a: number; b: number; c: number
@@ -100,6 +100,90 @@ export class Matrix3{
         )
     }
 }
-//|a b c|\\
-//|d e f|\\
-//|g h i|\\
+
+export class Matrix4{
+    a: number; b: number; c: number; d: number;
+    e: number; f: number; g: number; h: number;
+    i: number; j: number; k: number; l: number;
+    m: number; n: number; o: number; p: number;
+    constructor(
+        a: number, b: number, c: number, d: number,
+        e: number, f: number, g: number, h: number,
+        i: number, j: number, k: number, l: number,
+        m: number, n: number, o: number, p: number
+    ){ this.a = a; this.b = b; this.c = c; this.d = d; this.e = e; this.f = f; this.g = g; this.h = h; this.i = i; this.j = j; this.k = k; this.l = l; this.m = m; this.n = n; this.o = o; this.p = p; }
+    
+    multiply(b: Matrix4): Matrix4{ return Matrix4.multiply(this, b) }
+    translate(translation: Vector3D){ return this.multiply(Matrix4.translation(translation)) }
+    scale(scale: Vector3D){ return this.multiply(Matrix4.scale(scale)) }
+
+    transform(vector: Vector3D): Vector3D{
+        return new Vector3D(
+            this.a * vector.x + this.b * vector.y + this.c * vector.z + this.d,
+            this.e * vector.x + this.f * vector.y + this.g * vector.z + this.h,
+            this.i * vector.x + this.j * vector.y + this.k * vector.z + this.l
+        )
+    }
+
+    floats(): number[]{
+        return [
+            this.a, this.b, this.c, this.d,
+            this.e, this.f, this.g, this.h,
+            this.i, this.j, this.k, this.l,
+            this.m, this.n, this.o, this.p
+        ]
+    }
+
+    transpose(): Matrix4{
+        return new Matrix4(
+            this.a, this.e, this.i, this.m,
+            this.b, this.f, this.j, this.n,
+            this.c, this.g, this.k, this.o,
+            this.d, this.h, this.l, this.p
+        )
+    }
+
+    static multiply(a: Matrix4, b: Matrix4): Matrix4{
+        return new Matrix4(
+            a.a*b.a + a.b*b.e + a.c*b.i + a.d*b.m, a.a*b.b + a.b*b.f + a.c*b.j + a.d*b.n, a.a*b.c + a.b*b.g + a.c*b.k + a.d*b.o, a.a*b.d + a.b*b.h + a.c*b.l + a.d*b.p,
+            a.e*b.a + a.f*b.e + a.g*b.i + a.h*b.m, a.e*b.b + a.f*b.f + a.g*b.j + a.h*b.n, a.e*b.c + a.f*b.g + a.g*b.k + a.h*b.o, a.e*b.d + a.f*b.h + a.g*b.l + a.h*b.p,
+            a.i*b.a + a.j*b.e + a.k*b.i + a.l*b.m, a.i*b.b + a.j*b.f + a.k*b.j + a.l*b.n, a.i*b.c + a.j*b.g + a.k*b.k + a.l*b.o, a.i*b.d + a.j*b.h + a.k*b.l + a.l*b.p,
+            a.m*b.a + a.n*b.e + a.o*b.i + a.p*b.m, a.m*b.b + a.n*b.f + a.o*b.j + a.p*b.n, a.m*b.c + a.n*b.g + a.o*b.k + a.p*b.o, a.m*b.d + a.n*b.h + a.o*b.l + a.p*b.p
+        )
+    }
+
+    static translation(translation: Vector3D): Matrix4{
+        return new Matrix4(
+            1,0,0,translation.x,
+            0,1,0,translation.y,
+            0,0,1, translation.z,
+            0,0,0,1
+        )
+    }
+    static scale(scale: Vector3D): Matrix4{
+        return new Matrix4(
+            scale.x,0,0,0,
+            0,scale.y,0,0,
+            0,0,scale.z,0,
+            0,0,0,1
+        )
+    }
+    static identity(): Matrix4{
+        return new Matrix4(
+            1,0,0,0,
+            0,1,0,0,
+            0,0,1,0,
+            0,0,0,1
+        )
+    }
+    static aspect(fieldOfViewInRadians: number, width: number, height: number): Matrix4{
+        let f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+        let aspect = width/height
+        return new Matrix4(
+            -f/aspect, 0, 0,0,
+            0, f, 0,0,
+            0, 0, 1,0,
+            0,0,0,1
+        )
+    }
+}

@@ -132,6 +132,7 @@ export default class GLProgram{
             info.mapper(this.gl, info.position)
         }
     )
+    this.gl.enable(WebGLRenderingContext.DEPTH_TEST)
     this.gl.drawArrays(type, 0, vertexCount)
   }
   

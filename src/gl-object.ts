@@ -1,6 +1,6 @@
 import Vertex from './vertex'
-import { Transform2D } from './transform'
-import { Vector2D } from './vector'
+import { Transform3D } from './transform'
+import { Vector3D } from './vector'
 import GLProgram from './gl-program'
 
 export enum GLOptimizedType{
@@ -11,10 +11,10 @@ export enum GLOptimizedType{
 }
 
 export default abstract class GLObject{
-    transform: Transform2D = new Transform2D()
-    position: Vector2D = new Vector2D(0,0)
+    transform: Transform3D = new Transform3D()
+    position: Vector3D = new Vector3D(0,0,0)
     lineColor: number[] = [0,0,0,0.2]
-    _cachedPosition: Vector2D
+    _cachedPosition: Vector3D
     _cachedVerticies: Array<Vertex>
     abstract verticies(): Array<Vertex>
     lines(): number[]{ return [] }
@@ -22,7 +22,7 @@ export default abstract class GLObject{
     setColor(color: number[]){
         this.verticies().forEach((vertex: Vertex) => vertex.color = color)
     }
-    transformedPosition(): Vector2D{
+    transformedPosition(): Vector3D{
         //if(this.transform.changed){
             let transformationMatrix = this.transform.transform()
             this._cachedPosition = this.transform.transform().transform(this.position)
