@@ -143,6 +143,44 @@ export class Matrix4{
         )
     }
 
+    determinant(): number{
+        const m = this
+        return (m.a*m.f*m.k*m.p) + (m.a*m.g*m.l*m.n) + (m.a*m.h*m.j*m.o) +
+               (m.b*m.e*m.l*m.o) + (m.b*m.g*m.i*m.p) + (m.b*m.h*m.k*m.m) +
+               (m.c*m.e*m.j*m.p) + (m.c*m.f*m.l*m.m) + (m.c*m.h*m.i*m.n) +
+               (m.d*m.e*m.k*m.n) + (m.d*m.f*m.i*m.o) + (m.d*m.g*m.j*m.m) -
+               (m.a*m.f*m.l*m.o) - (m.a*m.g*m.j*m.p) - (m.a*m.h*m.k*m.n) -
+               (m.b*m.e*m.k*m.p) - (m.b*m.g*m.l*m.m) - (m.b*m.h*m.i*m.o) -
+               (m.c*m.e*m.l*m.n) - (m.c*m.f*m.i*m.p) - (m.c*m.h*m.j*m.m) -
+               (m.d*m.e*m.j*m.o) - (m.d*m.f*m.k*m.m) - (m.d*m.g*m.i*m.n)
+    }
+
+    inverse(): Matrix4{
+        const m = this
+        const det = this.determinant()
+        return new Matrix4(
+            ((m.f*m.k*m.p) + (m.g*m.l*m.n) + (m.h*m.j*m.o) - (m.f*m.l*m.o) - (m.g*m.j*m.p) - (m.h*m.k*m.n))/det,
+            ((m.b*m.l*m.o) + (m.c*m.j*m.p) + (m.d*m.k*m.n) - (m.b*m.k*m.p) - (m.c*m.l*m.n) - (m.d*m.j*m.o))/det,
+            ((m.b*m.g*m.p) + (m.c*m.h*m.n) + (m.d*m.f*m.o) - (m.b*m.h*m.o) - (m.c*m.f*m.p) - (m.d*m.g*m.n))/det,
+            ((m.b*m.h*m.k) + (m.c*m.f*m.l) + (m.d*m.g*m.j) - (m.b*m.g*m.l) - (m.c*m.h*m.j) - (m.d*m.f*m.k))/det,
+
+            ((m.e*m.l*m.o) + (m.g*m.i*m.p) + (m.h*m.k*m.m) - (m.e*m.k*m.p) - (m.g*m.l*m.m) - (m.h*m.i*m.o))/det,
+            ((m.a*m.k*m.p) + (m.c*m.l*m.m) + (m.d*m.i*m.o) - (m.a*m.l*m.o) - (m.c*m.i*m.p) - (m.d*m.k*m.m))/det,
+            ((m.a*m.h*m.o) + (m.c*m.e*m.p) + (m.d*m.g*m.m) - (m.a*m.g*m.p) - (m.c*m.h*m.m) - (m.d*m.e*m.o))/det,
+            ((m.a*m.g*m.l) + (m.c*m.h*m.i) + (m.d*m.e*m.k) - (m.a*m.h*m.k) - (m.c*m.e*m.l) - (m.d*m.g*m.i))/det,
+
+            ((m.e*m.j*m.p) + (m.f*m.l*m.m) + (m.h*m.i*m.n) - (m.e*m.l*m.n) - (m.f*m.i*m.p) - (m.h*m.j*m.m))/det,
+            ((m.a*m.l*m.n) + (m.b*m.i*m.p) + (m.d*m.j*m.m) - (m.a*m.j*m.p) - (m.b*m.l*m.m) - (m.d*m.i*m.n))/det,
+            ((m.a*m.f*m.p) + (m.b*m.h*m.m) + (m.d*m.e*m.n) - (m.a*m.h*m.n) - (m.b*m.e*m.p) - (m.d*m.f*m.m))/det,
+            ((m.a*m.h*m.j) + (m.b*m.e*m.l) + (m.d*m.f*m.i) - (m.a*m.f*m.l) - (m.b*m.h*m.i) - (m.d*m.e*m.j))/det,
+
+            ((m.e*m.k*m.n) + (m.f*m.i*m.o) + (m.g*m.j*m.m) - (m.e*m.j*m.l) - (m.f*m.k*m.m) - (m.g*m.i*m.n))/det,
+            ((m.a*m.j*m.o) + (m.b*m.k*m.m) + (m.c*m.i*m.n) - (m.a*m.k*m.n) - (m.b*m.i*m.o) - (m.c*m.j*m.m))/det,
+            ((m.a*m.g*m.n) + (m.b*m.e*m.o) + (m.c*m.f*m.m) - (m.a*m.f*m.o) - (m.b*m.g*m.m) - (m.c*m.e*m.n))/det,
+            ((m.a*m.f*m.k) + (m.b*m.g*m.i) + (m.c*m.e*m.j) - (m.a*m.g*m.j) - (m.b*m.e*m.k) - (m.c*m.f*m.i))/det
+        )
+    }
+
     static multiply(a: Matrix4, b: Matrix4): Matrix4{
         return new Matrix4(
             a.a*b.a + a.b*b.e + a.c*b.i + a.d*b.m, a.a*b.b + a.b*b.f + a.c*b.j + a.d*b.n, a.a*b.c + a.b*b.g + a.c*b.k + a.d*b.o, a.a*b.d + a.b*b.h + a.c*b.l + a.d*b.p,

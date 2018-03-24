@@ -1,7 +1,7 @@
 import { suite, test } from "mocha-typescript";
 import { expect } from 'chai';
 import { Vector2D } from "../src/vector";
-import { Matrix3 } from "../src/matrix";
+import { Matrix3, Matrix4 } from "../src/matrix";
 
 @suite
 class MatrixTest {
@@ -67,6 +67,16 @@ class MatrixTest {
         expect(M.determinant()).to.equal(1)
     }
 
+    @test determinant4x4() {
+        let M = new Matrix4(
+            6,0,-3,5,
+            4,13,6,-8,
+            -1,0,7,4,
+            8,6,0,2
+        )
+        expect(M.determinant()).to.equal(170)
+    }
+
     @test adjugate() {
         let M = new Matrix3(
             1,2,3,
@@ -95,6 +105,23 @@ class MatrixTest {
         )
         expect(M.inverse()).to.deep.equal(MInverse)
         expect(MInverse.multiply(M)).to.deep.equal(Matrix3.identity())
+    }
+
+    @test inverse4x4() {
+        let M = new Matrix4(
+            1,1,1,0,
+            0,3,1,2,
+            2,3,1,0,
+            1,0,2,1
+        )
+        let MInverse = new Matrix4(
+            -3, -0.5, 1.5, 1,
+            1, 0.25, -0.25, -0.5,
+            3, 0.25, -1.25, -0.5,
+            -3,-0,1,1
+        )
+        expect(M.inverse()).to.deep.equal(MInverse)
+        expect(MInverse.multiply(M)).to.deep.equal(Matrix4.identity())
     }
 
 }
