@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  install:
+  build:
     docker:
       - image: circleci/node:7.10
     working_directory: ~/simple-gl
@@ -46,10 +46,10 @@ workflows:
   version: 2
   test_and_release:
     jobs:
-      - install
+      - build
       - test:
           requires:
-            - install
+            - build
       - hold:
           type: approval
           requires:
@@ -63,4 +63,3 @@ workflows:
           filters:
             branches:
               only: master
-              
