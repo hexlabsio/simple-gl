@@ -7,7 +7,7 @@
     <artifactId>simple-gl</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>cloud-resource-finder</name>
+    <name>simple-gl</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,7 +38,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <moduleKind>umd</moduleKind>
+                    <moduleKind>commonjs</moduleKind>
                     <sourceMap>true</sourceMap>
                     <sourceMapEmbedSources>always</sourceMapEmbedSources>
                 </configuration>
@@ -63,6 +63,42 @@
                                     <includes>*.js</includes>
                                 </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.4</version>
+
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v7.10.0</nodeVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>test</arguments>
                         </configuration>
                     </execution>
                 </executions>
