@@ -4,7 +4,7 @@
   "description": "",
   "main": "target/js/simple-gl.js",
   "scripts": {
-    "test": "mocha target/test-js/simple-gl-tests.js"
+    "test": "shx sed -i s/simple-gl/\\.\\.\\/js\\/simple-gl/g target/test-js/simple-gl-tests.js && mocha target/test-js/simple-gl-tests.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "kotlin-test": "^1.2.50",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "shx": "^0.3.1"
   }
 }
