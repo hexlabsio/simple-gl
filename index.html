@@ -1,10 +1,36 @@
 <html>
-<body>
-<script src="./target/js/lib/kotlin.js"></script>
-<script src="./target/js/simple-gl.js"></script>
-<h1 id="main">Hello</h1>
-<script>
-</script>
+    <body>
+        <script src="./target/js/lib/kotlin.js"></script>
+        <script src="./target/js/simple-gl.js"></script>
+        <h1 id="main">Hello</h1>
+        <canvas id="display" width="1000" height="500" style="background-color:whitesmoke"></canvas>
+        <script>
+            const sg = this['simple-gl'].simpleGl
+            console.log(new sg.Vertex3d(new sg.Vector3(1,2,3), new sg.Vector4(50,50,50,1)))
 
-</body>
+                const canvas = document.getElementById('display')
+                const gl = canvas.getContext('webgl')
+                const vertexShader =    "attribute vec4 vertex_position;\n" +
+                                        "attribute vec4 vertex_color;\n" +
+                                        "varying vec4 pixelColor;\n" +
+
+                                        "void main() {\n" +
+                                        "    vec4 pos = vertex_position;\n" +
+                                        "    pixelColor = vertex_color;\n" +
+                                        "    gl_Position = pos;\n" +
+                                        "}"
+                const fragmentShader =  "precision mediump float;\n" +
+                                        "varying vec4 pixelColor;\n" +
+                                        "void main() {\n" +
+                                        "    gl_FragColor = pixelColor; \n" +
+                                        "}"
+
+                const program = sg.glProgramFrom_qk68lj$(gl, vertexShader, fragmentShader, sg.vertex3dAttributeMappings())
+                const triangle = new sg.GlTriangle(new sg.Vertex3d(new sg.Vector3(0,0,0)), new sg.Vertex3d(new sg.Vector3(1,0,0)),new sg.Vertex3d(new sg.Vector3(1,1,0)))
+                console.log(triangle)
+                program.stage()
+                triangle.render_gq0wjs$(program)
+        </script>
+
+    </body>
 </html>

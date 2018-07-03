@@ -20,6 +20,7 @@ data class GlProgram(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> updateUniform(name: String, data: T){
         with(uniforms[name]!! as UniformInfo<T>){
             stage()
@@ -49,21 +50,6 @@ data class GlProgram(
 
     companion object {
 
-        fun programFrom(
-                renderingContext: WebGLRenderingContext,
-                shaders: Map<Int, String>,
-                uniforms: List<Uniform<*>>,
-                attributes: List<Attribute>
-        ): GlProgram{
-            val program = renderingContext.program(shaders.map { renderingContext.shader(it.key, it.value) })
-            return GlProgram(
-                    renderingContext,
-                    program,
-                    attributes =  attributes.map { it.name to renderingContext.attribute(program, it) }.toMap(),
-                    uniforms = uniforms.map { it.name to renderingContext.uniform(program, it) }.toMap()
-            )
-        }
-
         private fun resize(canvas: HTMLCanvasElement){
             if(canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight){
                 canvas.width = canvas.clientWidth
@@ -72,6 +58,26 @@ data class GlProgram(
         }
     }
 }
+
+fun glProgramFrom(
+        renderingContext: WebGLRenderingContext,
+        vertexShader: String,
+        fragmentShader: String,
+        attributes: List<Attribute>,
+        uniforms: List<Uniform<*>> = emptyList()
+): GlProgram{
+    val program = renderingContext.program(listOf(
+            renderingContext.shader(WebGLRenderingContext.FRAGMENT_SHADER, fragmentShader),
+            renderingContext.shader(WebGLRenderingContext.VERTEX_SHADER, vertexShader)
+    ))
+    return GlProgram(
+            renderingContext,
+            program,
+            attributes =  attributes.map { it.name to renderingContext.attribute(program, it) }.toMap(),
+            uniforms = uniforms.map { it.name to renderingContext.uniform(program, it) }.toMap()
+    )
+}
+
 
 fun WebGLRenderingContext.shader(type: Int, source: String): WebGLShader{
     return this.createShader(type).also {

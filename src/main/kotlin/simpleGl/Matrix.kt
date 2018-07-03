@@ -5,6 +5,8 @@ data class Matrix3(
         val d: Float, val e: Float, val f: Float,
         val g: Float, val h: Float, val i: Float
 ): ArrayList<Float>(listOf(a, b, c, d, e, f, g, h ,i)){
+    constructor(scale: Vector2, translation: Vector2): this(scale.x,0f,translation.x,0f,scale.y,translation.y,0f,0f,1f)
+
     val determinant: Float by lazy { a*(e*i-h*f)-b*(d*i-g*f)+c*(d*h-g*e) }
 
     companion object {

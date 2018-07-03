@@ -1,5 +1,8 @@
 package simpleGl
 
+import org.khronos.webgl.WebGLProgram
+import org.khronos.webgl.WebGLRenderingContext
+import org.w3c.dom.HTMLCanvasElement
 import kotlin.test.Test
 import kotlin.test.expect
 
@@ -7,6 +10,7 @@ import simpleGl.Vector2
 import kotlin.math.exp
 
 class MatrixTest {
+
     @Test fun identity3() = expect(Matrix3(
             1f,0f,0f,
             0f, 1f, 0f,
