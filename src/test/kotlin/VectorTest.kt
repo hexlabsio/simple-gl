@@ -1,9 +1,6 @@
-package simpleGl
-
 import kotlin.test.Test
 import kotlin.test.expect
 
-import simpleGl.Vector2
 
 class VectorTest{
     @Test fun plus2D(){

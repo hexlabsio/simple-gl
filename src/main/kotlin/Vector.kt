@@ -1,4 +1,3 @@
-package simpleGl
 
 import kotlin.math.sqrt
 

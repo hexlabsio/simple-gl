@@ -1,4 +1,3 @@
-package simpleGl
 
 import org.khronos.webgl.Float32Array
 import org.khronos.webgl.WebGLProgram
@@ -37,6 +36,7 @@ data class GlProgram(
 
     fun stage() = renderingContext.useProgram(program)
 
+    @JsName("render")
     fun render(type: Int, vertexCount: Int){
         attributes.values.forEach {
             renderingContext.bindBuffer(it.type.value, it.buffer)

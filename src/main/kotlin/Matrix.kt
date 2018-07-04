@@ -1,4 +1,3 @@
-package simpleGl
 
 data class Matrix3(
         val a: Float, val b: Float, val c: Float,

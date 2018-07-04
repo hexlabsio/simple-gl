@@ -1,5 +1,3 @@
-package simpleGl
-
 import org.khronos.webgl.WebGLRenderingContext
 
 

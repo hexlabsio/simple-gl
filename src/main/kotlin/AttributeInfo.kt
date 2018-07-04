@@ -1,4 +1,3 @@
-package simpleGl
 
 import org.khronos.webgl.WebGLBuffer
 import org.khronos.webgl.WebGLRenderingContext

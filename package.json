@@ -1,13 +1,19 @@
 {
-  "name": "simple-gl-kotlin",
+  "name": "simple-gl",
+  "author": "Chris Barbour <cbarbour02@qub.ac.uk>",
   "version": "1.0.0",
-  "description": "",
-  "main": "target/js/simple-gl.js",
+  "description": "A thin wrapper over webgl",
+  "main": "simple-gl.js",
   "scripts": {
-    "test": "shx sed -i s/simple-gl/\\.\\.\\/js\\/simple-gl/g target/test-js/simple-gl-tests.js && mocha target/test-js/simple-gl-tests.js"
+    "pretest": "shx cp -f target/js/simple-gl.js node_modules",
+    "test": "mocha target --recursive",
+    "posttest": "shx rm -f node_modules/simple-gl.js"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrisbarbour/simple-gl.git"
+  },
   "dependencies": {
     "kotlin": "^1.2.50"
   },
