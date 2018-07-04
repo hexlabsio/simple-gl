@@ -1,5 +1,0 @@
---ui mocha-typescript
---require source-map-support/register
-dist/test/**/*.js
---recursive
---reporter mocha-circleci-reporter 

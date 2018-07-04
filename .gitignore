@@ -1,3 +1,5 @@
 node_modules
-dist
-test-results.xml
+node
+.idea
+target
+*.iml
