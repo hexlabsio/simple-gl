@@ -7,3 +7,14 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - .
+
+  test:
+    working_directory: ~/tmp
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: ls node_modules
