@@ -17,7 +17,7 @@ jobs:
       - persist_to_workspace:
           root: ~/tmp
           paths:
-            - *
+            - '*'
 
   test:
     working_directory: ~/tmp
