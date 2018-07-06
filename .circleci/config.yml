@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
-      - run: pwd && ls -ltr
+      - run: mv target/js/* .
       - run:
           name: Update Version
           command: npm version 2.0.$CIRCLE_BUILD_NUM
