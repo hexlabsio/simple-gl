@@ -21,15 +21,15 @@ jobs:
             - target/js
 
   deploy:
-    working_directory: ~/tmp
+    working_directory: ~/tmp/
     docker:
       - image: circleci/node:7
     steps:
       - attach_workspace:
-          at: ~/tmp/target/js
+          at: ~/tmp/
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > target/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
       - run: pwd && ls -ltr
       - run:
           name: Update Version
