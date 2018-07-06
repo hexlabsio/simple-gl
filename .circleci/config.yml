@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: npm install
       - persist_to_workspace:
-          root: workspace
+          root: node_modules
           paths:
             - .
 
@@ -18,5 +18,14 @@ jobs:
       - image: circleci/node:7
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: node_modules
       - run: ls node_modules
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+      - test:
+          requires:
+            - build
