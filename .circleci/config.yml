@@ -14,6 +14,7 @@ jobs:
             - ~/.m2
           key: simple-gl-{{ checksum "pom.xml" }}
       - run: mvn package
+      - run: mv README.md target/js
       - run: mv package.json target/js
       - persist_to_workspace:
           root: ~/tmp
