@@ -17,15 +17,18 @@ jobs:
       - persist_to_workspace:
           root: ~/tmp
           paths:
-            - '*'
+            - package.json
+            - target/js
 
-  test:
+  deploy:
     working_directory: ~/tmp
     docker:
       - image: circleci/node:7
     steps:
       - attach_workspace:
           at: ~/tmp/
+      - run: mv pacakge.json target/js
+      - run: cd target/js
       - run: ls -ltr
 
 workflows:
@@ -33,6 +36,6 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      - test:
+      - deploy:
           requires:
             - build
