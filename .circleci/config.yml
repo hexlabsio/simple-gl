@@ -27,7 +27,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/tmp/
-      - run: mv pacakge.json target/js
+      - run: mv package.json target/js
       - run: cd target/js
       - run: ls -ltr
 
