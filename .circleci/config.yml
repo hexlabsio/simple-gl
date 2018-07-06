@@ -17,7 +17,7 @@ jobs:
       - persist_to_workspace:
           root: ~/tmp
           paths:
-            - target
+            - *
 
   test:
     working_directory: ~/tmp
@@ -25,8 +25,8 @@ jobs:
       - image: circleci/node:7
     steps:
       - attach_workspace:
-          at: ~/tmp
-      - run: ls
+          at: ~/tmp/
+      - run: ls -ltr
 
 workflows:
   version: 2
