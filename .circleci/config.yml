@@ -3,14 +3,21 @@ jobs:
   build:
     working_directory: ~/tmp
     docker:
-      - image: circleci/node:7
+      - image: openjdk:8-jdk-browsers
     steps:
       - checkout
-      - run: npm install
-      - persist_to_workspace:
-          root: node_modules
+      - restore_cache:
+          key: simple-gl-{{ checksum "pom.xml" }}
+      - run: mvn dependency:go-offline
+      - save_cache:
           paths:
-            - .
+            - ~/.m2
+          key: simple-gl-{{ checksum "pom.xml" }}
+      - run: mvn package
+      - persist_to_workspace:
+          root: ~/tmp
+          paths:
+            - target
 
   test:
     working_directory: ~/tmp
@@ -18,8 +25,8 @@ jobs:
       - image: circleci/node:7
     steps:
       - attach_workspace:
-          at: node_modules
-      - run: ls node_modules
+          at: ~/tmp
+      - run: ls
 
 workflows:
   version: 2
