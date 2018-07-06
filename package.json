@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrisbarbour/simple-gl.git"
+    "url": "git+https://github.com/cloud-clusterer/simple-gl.git"
   },
   "dependencies": {
     "kotlin": "^1.2.50"
