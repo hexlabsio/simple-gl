@@ -5,13 +5,14 @@ import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLShader
 import org.w3c.dom.HTMLCanvasElement
 
-data class GlProgram(
+data class Program(
         val renderingContext: WebGLRenderingContext,
         val program: WebGLProgram,
         val attributes: Map<String, AttributeInfo>,
         val uniforms: Map<String, UniformInfo<*>>
 ){
 
+    @JsName("updateAttribute")
     fun updateAttribute(name: String, data: List<Float>){
         with(attributes[name]!!){
             renderingContext.bindBuffer(this.type.value, this.buffer)
@@ -19,6 +20,7 @@ data class GlProgram(
         }
     }
 
+    @JsName("updateUniform")
     @Suppress("UNCHECKED_CAST")
     fun <T> updateUniform(name: String, data: T){
         with(uniforms[name]!! as UniformInfo<T>){
@@ -27,10 +29,11 @@ data class GlProgram(
         }
     }
 
+    @JsName("resize")
     fun resize(x: Int, y: Int, width: Int, height: Int) = renderingContext.viewport(x, y, width, height)
 
     fun reconfigureViewport(){
-        GlProgram.resize(renderingContext.canvas)
+        Program.resize(renderingContext.canvas)
         resize(0,0, renderingContext.canvas.width, renderingContext.canvas.height)
     }
 
@@ -45,7 +48,7 @@ data class GlProgram(
         renderingContext.enable(WebGLRenderingContext.DEPTH_TEST)
         renderingContext.drawArrays(type, 0, vertexCount)
     }
-
+    @JsName("renderTriangles")
     fun renderTriangles(vertexCount: Int) = render(WebGLRenderingContext.TRIANGLES, vertexCount)
 
     companion object {
@@ -59,18 +62,25 @@ data class GlProgram(
     }
 }
 
-fun glProgramFrom(
+@JsName("simpleProgramFrom")fun simpleProgramFrom(renderingContext: WebGLRenderingContext) = programFrom(
+        renderingContext,
+        simpleVertexShader,
+        simpleFragmentShader,
+        vertex3dAttributeMappings()
+)
+
+@JsName("programFrom")fun programFrom(
         renderingContext: WebGLRenderingContext,
         vertexShader: String,
         fragmentShader: String,
         attributes: List<Attribute>,
         uniforms: List<Uniform<*>> = emptyList()
-): GlProgram{
+): Program{
     val program = renderingContext.program(listOf(
             renderingContext.shader(WebGLRenderingContext.FRAGMENT_SHADER, fragmentShader),
             renderingContext.shader(WebGLRenderingContext.VERTEX_SHADER, vertexShader)
     ))
-    return GlProgram(
+    return Program(
             renderingContext,
             program,
             attributes =  attributes.map { it.name to renderingContext.attribute(program, it) }.toMap(),
@@ -112,3 +122,18 @@ fun WebGLRenderingContext.attribute(program: WebGLProgram, attribute: Attribute)
 fun <T> WebGLRenderingContext.uniform(program: WebGLProgram, uniform: Uniform<T>): UniformInfo<T>{
     return UniformInfo(uniform.name, this.getUniformLocation(program, uniform.name)!!, uniform.mapper)
 }
+
+val simpleVertexShader =    "attribute vec4 vertex_position;\n" +
+                            "attribute vec4 vertex_color;\n" +
+                            "varying vec4 pixelColor;\n" +
+
+                            "void main() {\n" +
+                            "    vec4 pos = vertex_position;\n" +
+                            "    pixelColor = vertex_color;\n" +
+                            "    gl_Position = pos;\n" +
+                            "}"
+val simpleFragmentShader =  "precision mediump float;\n" +
+                            "varying vec4 pixelColor;\n" +
+                            "void main() {\n" +
+                            "    gl_FragColor = pixelColor; \n" +
+                            "}"

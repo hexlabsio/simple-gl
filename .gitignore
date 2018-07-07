@@ -3,3 +3,5 @@ node
 .idea
 target
 *.iml
+dist
+test-results.xml

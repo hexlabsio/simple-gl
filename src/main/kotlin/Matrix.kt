@@ -10,10 +10,17 @@ data class Matrix3(
 
     companion object {
         fun identity() = Matrix3(1f,0f,0f,0f,1f,0f,0f,0f,1f)
-        fun translation(translation: Vector2) = Matrix3( 1f, 0f, translation.x, 0f, 1f, translation.y, 0f, 0f, 1f)
-        fun scale(scale: Vector2) = Matrix3(scale.x,0f,0f,0f,scale.y,0f,0f,0f,1f)
+        @JsName("translation") fun translation(translation: Vector2) = Matrix3( 1f, 0f, translation.x, 0f, 1f, translation.y, 0f, 0f, 1f)
+        @JsName("scale") fun scale(scale: Vector2) = Matrix3(scale.x,0f,0f,0f,scale.y,0f,0f,0f,1f)
     }
 }
+@JsName("Identity2d")
+fun Matrix3Identity() = Matrix3.identity()
+@JsName("Translation2d")
+fun Matrix3Translation(translation: Vector2) = Matrix3.translation(translation)
+@JsName("Scale2d")
+fun Matrix3Scale(scale: Vector2) = Matrix3.scale(scale)
+
 fun Matrix3.transpose() = Matrix3(a,d,g,b,e,h,c,f,i)
 fun Matrix3.adjugate() = transpose().let {
         Matrix3(

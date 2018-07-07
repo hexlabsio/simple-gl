@@ -1,7 +1,7 @@
 
 import org.khronos.webgl.WebGLRenderingContext
 
-open class GlObject(val localVertices: List<Vertex3d>){
+open class Object(val localVertices: List<Vertex3d>){
     var localPosition: Vector3 = Vector3(0f,0f,0f)
     var transformation: Matrix4 = Matrix4.identity()
 
@@ -9,7 +9,7 @@ open class GlObject(val localVertices: List<Vertex3d>){
     fun vertices() = localVertices.map { it.copy(position = transformation * it.position) }
 
     @JsName("render")
-    fun render(program: GlProgram){
+    fun render(program: Program){
         vertices().let { vertices ->
             vertices.flatMap { it.attributes().entries }
                     .groupBy { it.key }

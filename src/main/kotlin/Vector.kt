@@ -3,13 +3,27 @@ import kotlin.math.sqrt
 
 typealias Color = Vector4
 
-data class Vector2(val x: Float, val y: Float): Vector(listOf(x, y))
-data class Vector3(val x: Float, val y: Float, val z: Float): Vector(listOf(x, y, z))
-data class Vector4(val r: Float, val g: Float, val b: Float, val a: Float = 0f): Vector(listOf(r, g, b, a))
+data class Vector2(val x: Float, val y: Float): Vector(listOf(x, y)){
+    override fun typeTransform(vector: Vector) = vector.to2D()
+}
+data class Vector3(val x: Float, val y: Float, val z: Float): Vector(listOf(x, y, z)){
+    override fun typeTransform(vector: Vector) = vector.to3D()
+}
+data class Vector4(val r: Float, val g: Float, val b: Float, val a: Float = 0f): Vector(listOf(r, g, b, a)){
+    override fun typeTransform(vector: Vector) = vector.to4D()
+}
 
 open class Vector(val components: List<Float>): ArrayList<Float>(components){
     private var _length: Float? = null
     private var _direction: Vector? = null
+
+    @JsName("typeTransform") open fun typeTransform(vector: Vector) = this
+    @JsName("translate") fun translate(v: Vector) = typeTransform(this + v)
+    @JsName("difference") fun difference(v: Vector) = typeTransform(this - v)
+    @JsName("scale") fun scale(v: Vector) = typeTransform(this * v)
+    @JsName("scaleEqually") fun scaleEqually(scale: Float) = typeTransform(this * scale)
+    @JsName("dot") infix fun dot(v: Vector) = this.times(v).components.sum()
+
     fun length(): Float{
         if(_length == null) _length = sqrt(this dot this)
         return _length!!
@@ -23,7 +37,6 @@ open class Vector(val components: List<Float>): ArrayList<Float>(components){
         }
         return _direction!!
     }
-
 }
 
 operator fun Vector.plus(v: Vector) = operateOn(v){ a, b -> a + b }
@@ -31,7 +44,7 @@ operator fun Vector.minus(v: Vector) = operateOn(v){ a, b -> a - b }
 operator fun Vector.times(v: Vector) = operateOn(v){ a, b -> a * b }
 operator fun Vector.times(scale: Float) = Vector(components.map { it * scale })
 operator fun Float.times(v: Vector) = v * this
-infix fun Vector.dot(v: Vector) = this.times(v).components.sum()
+
 
 fun Vector.to2D() = Vector2(this[0], this[1])
 fun Vector.to3D() = Vector3(this[0], this[1], this[2])
