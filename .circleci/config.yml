@@ -14,12 +14,12 @@ jobs:
             - ~/.m2
           key: simple-gl-{{ checksum "pom.xml" }}
       - run: mvn package
-      - run: mv README.md target/js
-      - run: mv package.json target/js
+      - run: mv README.md target/classes/META-INF
+      - run: mv package.json target/classes/META-INF
       - persist_to_workspace:
           root: ~/tmp
           paths:
-            - target/js
+            - target/classes/META-INF
 
   deploy:
     working_directory: ~/tmp/
@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
-      - run: mv target/js/* .
+      - run: mv target/classes/META-INF/* .
       - run:
           name: Update Version
           command: npm version 2.0.$CIRCLE_BUILD_NUM

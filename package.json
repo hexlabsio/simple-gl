@@ -5,8 +5,8 @@
   "description": "A thin wrapper over webgl",
   "main": "simple-gl.js",
   "scripts": {
-    "pretest": "shx cp -f target/js/simple-gl.js node_modules",
-    "test": "mocha target --recursive",
+    "pretest": "shx cp -f target/classes/META-INF/resources/simple-gl.js node_modules",
+    "test": "mocha target/test-js --recursive",
     "posttest": "shx rm -f node_modules/simple-gl.js"
   },
   "license": "Apache-2.0",
