@@ -15,7 +15,7 @@ jobs:
           key: simple-gl-{{ checksum "pom.xml" }}
       - run:
           name: Add extra files to build jar
-          command: mkdir -p target/classes/META-INF && cp -f package.json target/classes/META-INF && mv LICENSE target/classes/META-INF && mv README.md target/classes/META-INF
+          command: mkdir -p target/classes/META-INF/resources && cp -f package.json target/classes/META-INF/resources && mv LICENSE target/classes/META-INF/resources && mv README.md target/classes/META-INF/resources
       - run:
           name: Set jar version
           command: mvn versions:set -DnewVersion=2.0.$CIRCLE_BUILD_NUM
@@ -24,7 +24,7 @@ jobs:
           command: mvn -s .circleci/settings.xml deploy
       - run:
           name: Move files to npmdist directory
-          command: mkdir -p npmdist && mv target/classes/META-INF/* npmdist && mv package.json npmdist
+          command: mkdir -p npmdist && mv target/classes/META-INF/resources/* npmdist
       - run:
           name: npm Authentication
           command: cd npmdist && echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
