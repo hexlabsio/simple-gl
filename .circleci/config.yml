@@ -13,9 +13,10 @@ jobs:
           paths:
             - ~/.m2
           key: simple-gl-{{ checksum "pom.xml" }}
-      - run: mvn package
+      - run: ls -ltr && ls -ltr .circleci
       - run: mv README.md target/classes/META-INF
       - run: mv package.json target/classes/META-INF
+      - run: mvn -s .circleci/settings.xml deploy
       - persist_to_workspace:
           root: ~/tmp
           paths:
