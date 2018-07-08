@@ -16,6 +16,7 @@ jobs:
       - run: mkdir -p target/classes/META-INF
       - run: mv LICENSE target/classes/META-INF
       - run: mv README.md target/classes/META-INF
+      - run: mvn versions:set -DnewVersion=2.0.$CIRCLE_BUILD_NUM
       - run: mv package.json target/classes/META-INF
       - run: mvn -s .circleci/settings.xml deploy
       - persist_to_workspace:
