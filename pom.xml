@@ -6,7 +6,7 @@
 
     <groupId>cloud-clusterer</groupId>
     <artifactId>simple-gl</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>2.0.1</version>
 
     <name>simple-gl</name>
 
@@ -14,6 +14,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.2.50</kotlin.version>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-cloud-clusterer-cloud-clusterer</id>
+            <name>cloud-clusterer-cloud-clusterer</name>
+            <url>https://api.bintray.com/maven/cloud-clusterer/cloud-clusterer/simple-gl/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-js</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-js</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
@@ -90,16 +111,4 @@
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-js</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-js</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-    </dependencies>
 </project>
