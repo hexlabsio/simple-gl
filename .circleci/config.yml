@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/tmp
+    working_directory: ~/build
     docker:
       - image: circleci/openjdk:8-jdk-browsers
     steps:
@@ -13,40 +13,24 @@ jobs:
           paths:
             - ~/.m2
           key: simple-gl-{{ checksum "pom.xml" }}
-      - run: mkdir -p target/classes/META-INF
-      - run: mv LICENSE target/classes/META-INF
-      - run: mv README.md target/classes/META-INF
-      - run: mvn versions:set -DnewVersion=2.0.$CIRCLE_BUILD_NUM
-      - run: mv package.json target/classes/META-INF
-      - run: mvn -s .circleci/settings.xml deploy
-      - persist_to_workspace:
-          root: ~/tmp
-          paths:
-            - target/classes/META-INF
-
-  deploy:
-    working_directory: ~/tmp/
-    docker:
-      - image: circleci/node:7
-    steps:
-      - attach_workspace:
-          at: ~/tmp/
       - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
-      - run: mv target/classes/META-INF/* .
+          name: Add extra files to build jar
+          command: mkdir -p target/classes/META-INF && cp -f package.json target/classes/META-INF && mv LICENSE target/classes/META-INF && mv README.md target/classes/META-INF
       - run:
-          name: Update Version
-          command: npm version 2.0.$CIRCLE_BUILD_NUM
+          name: Set jar version
+          command: mvn versions:set -DnewVersion=2.0.$CIRCLE_BUILD_NUM
       - run:
-          name: Publish package
-          command: npm publish
-
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
+          name: Build, Test and Release webjar to bintray
+          command: mvn -s .circleci/settings.xml deploy
+      - run:
+          name: Move files to npmdist directory
+          command: mkdir -p npmdist && mv target/classes/META-INF/* npmdist && mv package.json npmdist
+      - run:
+          name: npm Authentication
+          command: cd npmdist && echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+      - run:
+          name: Set npm package version
+          command: cd npmdist && ../node/node ../node/node_modules/npm/bin/npm-cli.js version 2.0.$CIRCLE_BUILD_NUM
+      - run:
+          name: Release to npm
+          command: cd npmdist && ../node/node ../node/node_modules/npm/bin/npm-cli.js publish
