@@ -24,7 +24,7 @@ module.exports = {
 
   output: {
     path: __dirname + '/build',
-    filename: 'simple-gl-min.js',
+    filename: 'simple-gl.js',
   },
 
   plugins: [
