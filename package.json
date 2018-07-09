@@ -1,13 +1,12 @@
 {
   "name": "simple-gl",
   "author": "Chris Barbour <cbarbour02@qub.ac.uk>",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A thin wrapper over webgl",
   "main": "simple-gl.js",
   "scripts": {
-    "pretest": "shx cp -f target/classes/META-INF/resources/simple-gl.js node_modules",
-    "test": "mocha target/test-js --recursive",
-    "posttest": "shx rm -f node_modules/simple-gl.js"
+    "build": "webpack --bail --devtool source-map",
+    "test": "mocha kotlin_build/kotlin-test.js"
   },
   "license": "Apache-2.0",
   "repository": {
@@ -18,8 +17,11 @@
     "kotlin": "^1.2.50"
   },
   "devDependencies": {
+    "@jetbrains/kotlin-webpack-plugin": "^1.2.7",
     "kotlin-test": "^1.2.50",
     "mocha": "^5.2.0",
-    "shx": "^0.3.1"
+    "shx": "^0.3.1",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8"
   }
 }

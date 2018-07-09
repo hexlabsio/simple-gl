@@ -5,3 +5,5 @@ target
 *.iml
 dist
 test-results.xml
+build
+kotlin_build

@@ -3,34 +3,27 @@ jobs:
   build:
     working_directory: ~/build
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/node:8-browsers
     steps:
       - checkout
-      - restore_cache:
-          key: simple-gl-{{ checksum "pom.xml" }}
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: simple-gl-{{ checksum "pom.xml" }}
       - run:
-          name: Add extra files to build jar
-          command: mkdir -p target/classes/META-INF/resources && cp -f package.json target/classes/META-INF/resources && mv LICENSE target/classes/META-INF/resources && mv README.md target/classes/META-INF/resources
+          name: Install Node Dependencies
+          command: npm install
       - run:
-          name: Set jar version
-          command: mvn versions:set -DnewVersion=2.0.$CIRCLE_BUILD_NUM
+          name: Transpile
+          command: npm run build
       - run:
-          name: Build, Test and Release webjar to bintray
-          command: mvn -s .circleci/settings.xml deploy
+          name: Test
+          command: npm test
       - run:
-          name: Move files to npmdist directory
-          command: mkdir -p npmdist && mv target/classes/META-INF/resources/* npmdist
+          name: Stage artifact
+          command: mv package.json build
       - run:
           name: npm Authentication
-          command: cd npmdist && echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+          command: cd build && echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
       - run:
           name: Set npm package version
-          command: cd npmdist && ../node/node ../node/node_modules/npm/bin/npm-cli.js version 2.0.$CIRCLE_BUILD_NUM
+          command: cd build && npm version 0.0.$CIRCLE_BUILD_NUM
       - run:
           name: Release to npm
-          command: cd npmdist && ../node/node ../node/node_modules/npm/bin/npm-cli.js publish
+          command: cd build && npm publish
