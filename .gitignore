@@ -7,3 +7,4 @@ dist
 test-results.xml
 build
 kotlin_build
+npm-debug.log
