@@ -1,39 +1,36 @@
 const KotlinWebpackPlugin = require('@jetbrains/kotlin-webpack-plugin');
-const path = require('path');
 
 module.exports = {
-  entry: 'kotlinApp', // kotlinApp is the default module name
+  entry: 'simple-gl',
 
   resolve: {
-    modules: ['kotlin_build', 'node_modules'],
-  },
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        include: path.resolve(__dirname, '../kotlin_build'),
-        exclude: [
-          /kotlin\.js$/,
-        ],
-        use: ['source-map-loader'],
-        enforce: 'pre',
-      },
-    ],
+    modules: ['bin/build', 'node_modules'],
   },
 
   output: {
-    path: __dirname + '/build',
+    path: __dirname + '/bin/bundle',
     filename: 'simple-gl.js',
   },
 
   plugins: [
     new KotlinWebpackPlugin({
       src: __dirname,
-      verbose: true,
-      optimize: true,
+      output: 'bin/test',
+      moduleName: 'simple-gl',
       librariesAutoLookup: true,
       packagesContents: [require('./package.json')],
     }),
+    new KotlinWebpackPlugin({
+          src: __dirname + '/src',
+          output: 'bin/build',
+          verbose: true,
+          moduleName: 'simple-gl',
+          optimize: false,
+          sourceMapEmbedSources: 'always',
+          metaInfo: true,
+          sourceMaps: true,
+          librariesAutoLookup: true,
+          packagesContents: [require('./package.json')],
+        }),
   ],
 };

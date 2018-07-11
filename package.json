@@ -5,8 +5,8 @@
   "description": "A thin wrapper over webgl",
   "main": "simple-gl.js",
   "scripts": {
-    "build": "webpack --bail --devtool source-map",
-    "test": "mocha kotlin_build/kotlin-test.js"
+    "build": "shx rm -rf bin && webpack",
+    "test": "mocha bin/test"
   },
   "license": "Apache-2.0",
   "repository": {

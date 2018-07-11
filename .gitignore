@@ -1,10 +1,5 @@
 node_modules
-node
 .idea
-target
 *.iml
-dist
-test-results.xml
-build
-kotlin_build
+bin
 npm-debug.log
