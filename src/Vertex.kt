@@ -5,7 +5,7 @@ data class Vertex3d(
         val position: Vector3 = Vector3(x = 0f, y = 0f, z = 0f),
         val color: Color = Color(r = 0f, g = 0f, b = 0f, a = 1f)
 ){
-    fun attributes() = mapOf( "vertex_position" to position.components, "vertex_color" to color.components )
+    fun attributes() = mapOf( "vertex_position" to position.components(), "vertex_color" to color.components() )
 
 }
 

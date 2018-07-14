@@ -3,88 +3,53 @@ import kotlin.math.sqrt
 
 typealias Color = Vector4
 
-data class Vector2(val x: Float, val y: Float): Vector(listOf(x, y)){
-    override fun typeTransform(vector: Vector) = vector.to2D()
-}
-data class Vector3(val x: Float, val y: Float, val z: Float): Vector(listOf(x, y, z)){
-    override fun typeTransform(vector: Vector) = vector.to3D()
-}
-data class Vector4(val r: Float, val g: Float, val b: Float, val a: Float = 0f): Vector(listOf(r, g, b, a)){
-    override fun typeTransform(vector: Vector) = vector.to4D()
+interface Vector {
+    fun components(): List<Float>
+    fun length(): Float
+    @JsName("dot") fun dot(other: Vector): Float
+    fun calculateLength() = sqrt(this.dot(this))
 }
 
-open class Vector(val components: List<Float>): ArrayList<Float>(components){
+class InvalidVectorOperation(dimensions: Int): IllegalArgumentException("This operation is invalid, may only operate on Vector$dimensions")
+
+data class Vector2(val x: Float, val y: Float): Vector{
     private var _length: Float? = null
-    private var _direction: Vector? = null
-
-    @JsName("typeTransform") open fun typeTransform(vector: Vector) = this
-    @JsName("translate") fun translate(v: Vector) = typeTransform(this + v)
-    @JsName("difference") fun difference(v: Vector) = typeTransform(this - v)
-    @JsName("scale") fun scale(v: Vector) = typeTransform(this * v)
-    @JsName("scaleEqually") fun scaleEqually(scale: Float) = typeTransform(this * scale)
-
-
-    fun length(): Float{
-        if(_length == null) _length = sqrt(this dot this)
+    @JsName("plus") operator fun plus(other: Vector2) = Vector2(x = x + other.x, y = y + other.y)
+    @JsName("minus") operator fun minus(other: Vector2) = Vector2(x = x - other.x, y = y - other.y)
+    @JsName("scale") operator fun times(scale: Vector2) = Vector2(x = x * scale.x, y = y * scale.y)
+    @JsName("scaleUniformly") operator fun times(scale: Float) = Vector2(x = x * scale, y = y * scale)
+    override fun dot(other: Vector) = when(other){ is Vector2 -> x * other.x + y * other.y; else -> throw InvalidVectorOperation(2) }
+    override fun length(): Float {
+        if(_length == null) _length = calculateLength()
         return _length!!
     }
-    open fun direction(): Vector {
-        if (_direction == null) _direction = with(length()) {
-            when {
-                this == 0f -> Vector(components.map { 0f })
-                else -> Vector(components.map { it / this })
-            }
-        }
-        return typeTransform(_direction!!)
-    }
+    override fun components() = listOf(x, y)
 }
 
-operator fun Vector.plus(v: Vector) = operateOn(v){ a, b -> a + b }
-operator fun Vector.minus(v: Vector) = operateOn(v){ a, b -> a - b }
-operator fun Vector.times(v: Vector) = operateOn(v){ a, b -> a * b }
-operator fun Vector.times(scale: Float) = Vector(components.map { it * scale })
-operator fun Float.times(v: Vector) = v * this
-@JsName("dot") infix fun Vector.dot(v: Vector) = this.times(v).components.sum()
-
-fun Vector.to2D() = Vector2(this[0], this[1])
-fun Vector.to3D() = Vector3(this[0], this[1], this[2])
-fun Vector.to4D() = Vector4(this[0], this[1], this[2], this[3])
-
-operator fun Vector2.plus(v: Vector2) = (this as Vector).plus(v).to2D()
-operator fun Vector2.minus(v: Vector2) = (this as Vector).minus(v).to2D()
-operator fun Vector2.times(v: Vector2) = (this as Vector).times(v).to2D()
-operator fun Vector2.times(scale: Float) = (this as Vector).times(scale).to2D()
-
-
-operator fun Vector3.plus(v: Vector3) = (this as Vector).plus(v).to3D()
-operator fun Vector3.minus(v: Vector3) = (this as Vector).minus(v).to3D()
-operator fun Vector3.times(v: Vector3) = (this as Vector).times(v).to3D()
-operator fun Vector3.times(scale: Float) = (this as Vector).times(scale).to3D()
-
-operator fun Vector4.plus(v: Vector4) = (this as Vector).plus(v).to4D()
-operator fun Vector4.minus(v: Vector4) = (this as Vector).minus(v).to4D()
-operator fun Vector4.times(v: Vector4) = (this as Vector).times(v).to4D()
-operator fun Vector4.times(scale: Float) = (this as Vector).times(scale).to4D()
-
-
-
-private fun Vector.operateOn(b: Vector, operation: (Float, Float) -> Float) = Vector((components to b.components).sequence().map{ it.safe(operation) })
-
-private fun <A> Pair<A?,A?>.safe(operation: (A, A) -> A): A{
-    return when{
-        (first != null && second != null) -> operation(first!!, second!!)
-        first != null -> first!!
-        second != null -> second!!
-        else -> throw IllegalArgumentException("At least one side must be not null for safe operation")
+data class Vector3(val x: Float, val y: Float, val z: Float): Vector {
+    private var _length: Float? = null
+    @JsName("plus") operator fun plus(other: Vector3) = Vector3(x = x + other.x, y = y + other.y, z = z + other.z)
+    @JsName("minus") operator fun minus(other: Vector3) = Vector3(x = x - other.x, y = y - other.y, z = z - other.z)
+    @JsName("scale") operator fun times(scale: Vector3) = Vector3(x = x * scale.x, y = y * scale.y, z = z * scale.z)
+    @JsName("scaleUniformly") operator fun times(scale: Float) = Vector3(x = x * scale, y = y * scale, z = z * scale)
+    override fun dot(other: Vector) = when(other){ is Vector3 -> x * other.x + y * other.y + z * other.z; else -> throw InvalidVectorOperation(3) }
+    override fun length(): Float {
+        if (_length == null) _length = calculateLength()
+        return _length!!
     }
+    override fun components() = listOf(x, y, z)
 }
 
-private fun <A, B> Pair<Iterable<A>, Iterable<B>>.sequence(): List<Pair<A?, B?>> = this.iterator().asSequence().toList()
-private fun <A, B> Pair<Iterable<A>, Iterable<B>>.iterator(): Iterator<Pair<A?, B?>> {
-    val a = first.iterator()
-    val b = second.iterator()
-    return object : Iterator<Pair<A?, B?>> {
-        override fun hasNext() = a.hasNext() || b.hasNext()
-        override fun next(): Pair<A?, B?> = Pair(if(a.hasNext()) a.next() else null, if(b.hasNext()) b.next() else null)
+data class Vector4(val r: Float, val g: Float, val b: Float, val a: Float): Vector {
+    private var _length: Float? = null
+    @JsName("plus") operator fun plus(other: Vector4) = Vector4(r = r + other.r, g = g + other.g, b = b + other.b, a = a + other.a)
+    @JsName("minus") operator fun minus(other: Vector4) = Vector4(r = r - other.r, g = g - other.g, b = b - other.b, a = a - other.a)
+    @JsName("scale") operator fun times(scale: Vector4) = Vector4(r = r * scale.r, g = g * scale.g, b = b * scale.b, a = a * scale.a)
+    @JsName("scaleUniformly") operator fun times(scale: Float) = Vector4(r = r * scale, g = g * scale, b = b * scale, a = a * scale)
+    override fun dot(other: Vector) = when(other){ is Vector4 -> r * other.r + g * other.g + b * other.b + a * other.a; else -> throw InvalidVectorOperation(4) }
+    override fun length(): Float {
+        if (_length == null) _length = calculateLength()
+        return _length!!
     }
+    override fun components() = listOf(r, g, b, a)
 }
