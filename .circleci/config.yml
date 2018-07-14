@@ -16,14 +16,11 @@ jobs:
           name: Test
           command: npm test
       - run:
-          name: Stage artifact
-          command: mv package.json bin/build && mv LICENSE bin/build && mv README.md bin/build
-      - run:
           name: npm Authentication
-          command: cd bin/build && echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
       - run:
           name: Set npm package version
-          command: cd bin/build && npm version 2.0.$CIRCLE_BUILD_NUM
+          command: npm version 2.0.$CIRCLE_BUILD_NUM
       - run:
           name: Release to npm
-          command: cd bin/build && npm publish
+          command: npm publish

@@ -1,5 +1,5 @@
 node_modules
-.idea
-*.iml
 bin
 npm-debug.log
+test-results.xml
+.idea/workspace.xml

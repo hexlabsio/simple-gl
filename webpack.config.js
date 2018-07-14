@@ -23,9 +23,7 @@ module.exports = {
     new KotlinWebpackPlugin({
           src: __dirname + '/src',
           output: 'bin/build',
-          verbose: true,
           moduleName: 'simple-gl',
-          optimize: false,
           sourceMapEmbedSources: 'always',
           metaInfo: true,
           sourceMaps: true,

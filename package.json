@@ -1,11 +1,11 @@
 {
   "name": "simple-gl",
-  "author": "Chris Barbour <cbarbour02@qub.ac.uk>",
-  "version": "0.0.0",
+  "author": "Chris Barbour <chris.barbour03@gmail.com>",
+  "version": "2.0.0",
   "description": "A thin wrapper over webgl",
-  "main": "simple-gl.js",
+  "main": "bin/build/simple-gl.js",
   "scripts": {
-    "build": "shx rm -rf bin && webpack",
+    "build": "shx rm -rf bin && webpack && shx rm -rf bin/build/kotlin-test*",
     "test": "mocha bin/test"
   },
   "license": "Apache-2.0",
