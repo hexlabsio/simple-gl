@@ -3,4 +3,3 @@ bin
 npm-debug.log
 test-results.xml
 .idea/workspace.xml
-package-lock.json
