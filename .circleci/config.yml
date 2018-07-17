@@ -23,4 +23,4 @@ jobs:
           command: npm version --no-git-tag-version -f 2.0.$CIRCLE_BUILD_NUM
       - run:
           name: Release to npm
-          command: npm publish
+          command: npm publish --access public
