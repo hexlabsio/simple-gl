@@ -1,5 +1,5 @@
 {
-  "name": "simple-gl",
+  "name": "@cloud-clusterer/simple-gl",
   "author": "Chris Barbour <chris.barbour03@gmail.com>",
   "version": "2.0.0",
   "description": "A thin wrapper over webgl",

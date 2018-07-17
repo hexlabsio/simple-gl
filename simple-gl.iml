@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="KotlinJavaScript" level="project" />
     <orderEntry type="library" name="Kotlin_Test" level="project" />
+    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

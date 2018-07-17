@@ -8,6 +8,8 @@ open class Object(val localVertices: List<Vertex3d>){
     fun position() = transformation * localPosition
     fun vertices() = localVertices.map { it.copy(position = transformation * it.position) }
 
+    open fun optimizedType() = WebGLRenderingContext.TRIANGLES
+
     @JsName("render")
     fun render(program: Program){
         vertices().let { vertices ->
@@ -15,7 +17,7 @@ open class Object(val localVertices: List<Vertex3d>){
                     .groupBy { it.key }
                     .map { it.key to it.value.flatMap { it.value } }
                     .forEach { program.updateAttribute(it.first, it.second) }
-            program.render(WebGLRenderingContext.TRIANGLES, vertices.size)
+            program.render(optimizedType(), vertices.size)
         }
     }
 
