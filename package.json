@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "description": "A thin wrapper over webgl",
   "main": "bin/build/simple-gl.js",
+  "private": false,
   "scripts": {
     "build": "shx rm -rf bin && webpack && shx rm -rf bin/build/kotlin-test*",
     "test": "mocha bin/test"
