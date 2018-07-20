@@ -29,6 +29,11 @@ data class Program(
         }
     }
 
+    @JsName("updateProjection")
+    fun updateProjection(projection: Matrix4){
+        updateUniform("projectionMatrix", projection.toTypedArray())
+    }
+
     @JsName("resize")
     fun resize(x: Int, y: Int, width: Int, height: Int) = renderingContext.viewport(x, y, width, height)
 
@@ -67,6 +72,21 @@ data class Program(
         simpleVertexShader,
         simpleFragmentShader,
         vertex3dAttributeMappings()
+)
+
+@JsName("projectedProgramFrom")fun projectedProgramFrom(renderingContext: WebGLRenderingContext) = programFrom(
+        renderingContext,
+        projectionVertexShader,
+        simpleFragmentShader,
+        vertex3dAttributeMappings(),
+        listOf(
+                Uniform<Array<Float>>(
+                        name = "projectionMatrix",
+                        mapper = { gl, position, data ->
+                            gl.uniformMatrix4fv(position, false, data)
+                        }
+                )
+        )
 )
 
 @JsName("programFrom")fun programFrom(
@@ -136,4 +156,14 @@ val simpleFragmentShader =  "precision mediump float;\n" +
                             "varying vec4 pixelColor;\n" +
                             "void main() {\n" +
                             "    gl_FragColor = pixelColor; \n" +
+                            "}"
+
+val projectionVertexShader= "attribute vec4 vertex_position;\n" +
+                            "attribute vec4 vertex_color;\n" +
+                            "varying vec4 pixelColor;\n" +
+                            "uniform mat4 projectionMatrix;\n" +
+                            "void main() {\n" +
+                            "    vec4 pos = projectionMatrix * vertex_position * vec4(1,1,0.001, 1.0+vertex_position.z*0.01);\n" +
+                            "    pixelColor = vertex_color;\n" +
+                            "    gl_Position = pos;\n" +
                             "}"

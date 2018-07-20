@@ -1,3 +1,5 @@
+import kotlin.math.PI
+import kotlin.math.tan
 
 data class Matrix3(
         val a: Float, val b: Float, val c: Float,
@@ -99,3 +101,14 @@ operator fun Matrix4.times(x: Matrix4) = Matrix4(
 
 infix fun Matrix4.translate(translation: Vector3) = this * Matrix4.translation(translation)
 infix fun Matrix4.scale(scale: Vector3) = this * Matrix4.scale(scale)
+
+fun aspectProjection(fieldOfViewInRadians: Float, width: Float, height: Float): Matrix4{
+    val f = tan(PI*0.5f - 0.5f * fieldOfViewInRadians).toFloat()
+    val aspect = width/height
+    return Matrix4(
+            -f/aspect, 0f, 0f, 0f,
+            0f, f, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f
+    )
+}

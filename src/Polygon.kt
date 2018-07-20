@@ -17,7 +17,7 @@ data class Polygon(val sides: Int, val radius: Float, val startDirection: Vector
                         z = 0f
                     )
                 )
-            }
+            } + Vertex3d(start)
         }
     }
 }

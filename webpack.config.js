@@ -1,4 +1,5 @@
 const KotlinWebpackPlugin = require('@jetbrains/kotlin-webpack-plugin');
+const path = require('path')
 
 module.exports = {
   entry: 'simple-gl',
@@ -11,6 +12,18 @@ module.exports = {
     path: __dirname + '/bin/bundle',
     filename: 'simple-gl.js',
   },
+
+  module: {
+      rules: [
+        {
+          test: /\.js$/,
+          include: path.resolve(__dirname, '/bin'),
+          exclude: [ /kotlin\.js$/ ],
+          use: ['source-map-loader'],
+          enforce: 'pre'
+        }
+      ]
+    },
 
   plugins: [
     new KotlinWebpackPlugin({
