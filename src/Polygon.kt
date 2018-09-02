@@ -1,10 +1,12 @@
 import org.khronos.webgl.WebGLRenderingContext
 import kotlin.math.*
 
-data class Polygon(val sides: Int, val radius: Float, val startDirection: Vector3 = Vector3(1f,0f,0f))
+open class Polygon(val sides: Int, val radius: Float, val startDirection: Vector3 = Vector3(1f,0f,0f))
     : Object(verticesFor(sides, radius, startDirection)){
 
     override fun optimizedType() = WebGLRenderingContext.TRIANGLE_FAN
+    private fun inFront(v: Vector3) = v.copy(z = v.z - 0.001f)
+    override fun border() = with(vertices()){ Lines(subList(1,size).map { it.copy(color = Color(0f,0f,0f,1f)) }) }
 
     companion object {
         fun verticesFor(sides: Int, radius: Float, startDirection: Vector3 = Vector3(1f,0f,0f)): List<Vertex3d>{
