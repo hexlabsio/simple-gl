@@ -42,6 +42,7 @@ data class Vector3(val x: Float, val y: Float, val z: Float): Vector {
     @JsName("minus") operator fun minus(other: Vector3) = Vector3(x = x - other.x, y = y - other.y, z = z - other.z)
     @JsName("scale") operator fun times(scale: Vector3) = Vector3(x = x * scale.x, y = y * scale.y, z = z * scale.z)
     @JsName("scaleUniformly") operator fun times(scale: Float) = Vector3(x = x * scale, y = y * scale, z = z * scale)
+    @JsName("div") operator fun div(scale: Float) = Vector3(x = x / scale, y = y / scale, z = z / scale)
     override fun dot(other: Vector) = when(other){ is Vector3 -> x * other.x + y * other.y + z * other.z; else -> throw InvalidVectorOperation(3) }
     fun direction() = when(length()){
         0f -> Vector3(0f, 0f, 0f)
