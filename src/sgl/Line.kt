@@ -1,3 +1,5 @@
+package sgl
+
 import org.khronos.webgl.WebGLRenderingContext
 
 open class Line(val a: Vertex3d, val b: Vertex3d): Object(listOf(a, b)){

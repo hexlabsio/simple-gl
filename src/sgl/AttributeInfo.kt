@@ -1,4 +1,4 @@
-
+package sgl
 import org.khronos.webgl.WebGLBuffer
 import org.khronos.webgl.WebGLRenderingContext
 

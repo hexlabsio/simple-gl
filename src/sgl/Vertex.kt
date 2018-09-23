@@ -1,3 +1,5 @@
+package sgl
+
 import org.khronos.webgl.WebGLRenderingContext
 
 

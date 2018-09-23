@@ -1,4 +1,4 @@
-
+package sgl
 import org.khronos.webgl.Float32Array
 import org.khronos.webgl.WebGLProgram
 import org.khronos.webgl.WebGLRenderingContext
@@ -33,12 +33,16 @@ data class Program(
     fun updateProjection(projection: Matrix4){
         updateUniform("projectionMatrix", projection.toTypedArray())
     }
+    @JsName("updateWorld")
+    fun updateWorld(transform: Matrix4){
+        updateUniform("worldMatrix", transform.toTypedArray())
+    }
 
     @JsName("resize")
     fun resize(x: Int, y: Int, width: Int, height: Int) = renderingContext.viewport(x, y, width, height)
 
     fun reconfigureViewport(){
-        Program.resize(renderingContext.canvas)
+        resize(renderingContext.canvas)
         resize(0,0, renderingContext.canvas.width, renderingContext.canvas.height)
     }
 
@@ -85,6 +89,12 @@ data class Program(
                         mapper = { gl, position, data ->
                             gl.uniformMatrix4fv(position, false, data)
                         }
+                ),
+                Uniform(
+                        name = "worldMatrix",
+                        mapper = { gl, position, data ->
+                            gl.uniformMatrix4fv(position, false, data)
+                        }
                 )
         )
 )
@@ -95,7 +105,7 @@ data class Program(
         fragmentShader: String,
         attributes: List<Attribute>,
         uniforms: List<Uniform<*>> = emptyList()
-): Program{
+): Program {
     val program = renderingContext.program(listOf(
             renderingContext.shader(WebGLRenderingContext.FRAGMENT_SHADER, fragmentShader),
             renderingContext.shader(WebGLRenderingContext.VERTEX_SHADER, vertexShader)
@@ -103,7 +113,7 @@ data class Program(
     return Program(
             renderingContext,
             program,
-            attributes =  attributes.map { it.name to renderingContext.attribute(program, it) }.toMap(),
+            attributes = attributes.map { it.name to renderingContext.attribute(program, it) }.toMap(),
             uniforms = uniforms.map { it.name to renderingContext.uniform(program, it) }.toMap()
     )
 }
@@ -131,7 +141,7 @@ fun WebGLRenderingContext.program(shaders: List<WebGLShader>): WebGLProgram{
     }!!
 }
 
-fun WebGLRenderingContext.attribute(program: WebGLProgram, attribute: Attribute): AttributeInfo{
+fun WebGLRenderingContext.attribute(program: WebGLProgram, attribute: Attribute): AttributeInfo {
     val position = this.getAttribLocation(program, attribute.name)
     val buffer = this.createBuffer()!!
     this.bindBuffer(attribute.type.value, buffer)
@@ -139,7 +149,7 @@ fun WebGLRenderingContext.attribute(program: WebGLProgram, attribute: Attribute)
     return AttributeInfo(attribute.name, position, attribute.type, buffer, attribute.mapper)
 }
 
-fun <T> WebGLRenderingContext.uniform(program: WebGLProgram, uniform: Uniform<T>): UniformInfo<T>{
+fun <T> WebGLRenderingContext.uniform(program: WebGLProgram, uniform: Uniform<T>): UniformInfo<T> {
     return UniformInfo(uniform.name, this.getUniformLocation(program, uniform.name)!!, uniform.mapper)
 }
 
@@ -161,9 +171,11 @@ val simpleFragmentShader =  "precision mediump float;\n" +
 val projectionVertexShader= "attribute vec4 vertex_position;\n" +
                             "attribute vec4 vertex_color;\n" +
                             "varying vec4 pixelColor;\n" +
+                            "uniform mat4 worldMatrix;\n" +
                             "uniform mat4 projectionMatrix;\n" +
                             "void main() {\n" +
-                            "    vec4 pos = projectionMatrix * vertex_position * vec4(1,1,0.001, 1.0+vertex_position.z*0.01);\n" +
+                            "    vec4 worldPos = worldMatrix * vertex_position;\n" +
+                            "    vec4 screenPos = projectionMatrix * vec4(worldPos.x, worldPos.y, worldPos.z, 1.0);\n" +
                             "    pixelColor = vertex_color;\n" +
-                            "    gl_Position = pos;\n" +
+                            "    gl_Position = screenPos;\n" +
                             "}"
