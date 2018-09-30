@@ -17,7 +17,7 @@ open class Object(val localVertices: List<Vertex3d>): Renderable{
     fun transformation(): Matrix4{
         if(dirty){
             dirty = false
-            cachedTransform = rotation * scale * translation
+            cachedTransform =  translation *  scale * rotation
         }
         return cachedTransform
     }
