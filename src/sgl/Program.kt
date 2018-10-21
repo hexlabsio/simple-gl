@@ -4,6 +4,8 @@ import org.khronos.webgl.WebGLProgram
 import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLShader
 import org.w3c.dom.HTMLCanvasElement
+import kotlin.browser.window
+import kotlin.math.floor
 
 data class Program(
         val renderingContext: WebGLRenderingContext,
@@ -41,8 +43,8 @@ data class Program(
     @JsName("resize")
     fun resize(x: Int, y: Int, width: Int, height: Int) = renderingContext.viewport(x, y, width, height)
 
-    fun reconfigureViewport(){
-        resize(renderingContext.canvas)
+    fun reconfigureViewport(width: Int, height: Int){
+        resize(renderingContext.canvas, width, height)
         resize(0,0, renderingContext.canvas.width, renderingContext.canvas.height)
     }
 
@@ -62,10 +64,15 @@ data class Program(
 
     companion object {
 
-        private fun resize(canvas: HTMLCanvasElement){
-            if(canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight){
-                canvas.width = canvas.clientWidth
-                canvas.height = canvas.clientHeight
+        private fun resize(canvas: HTMLCanvasElement, width: Int, height: Int){
+
+            val realToCSSPixels = window.devicePixelRatio
+            val displayWidth  = floor(width  * realToCSSPixels).toInt()
+            val displayHeight = floor(height * realToCSSPixels).toInt()
+
+            if (canvas.width  != displayWidth || canvas.height != displayHeight) {
+                canvas.width  = displayWidth
+                canvas.height = displayHeight
             }
         }
     }
