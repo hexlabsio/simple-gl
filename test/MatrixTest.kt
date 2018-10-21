@@ -79,7 +79,8 @@ class MatrixTest {
             1f, 0f, 0f, 0f,
             0f, 1f, 0f, 0f,
             0f, 0f, 1f, 0f,
-            0f, 0f, 0f, 1f
+            0f, 0f, 0f, 1f,
+            identity = true
     )){ Matrix4.identity() }
 
     @Test fun translation4() =  expect(Matrix4(
@@ -138,7 +139,7 @@ class MatrixTest {
                 1f, 0f, 2f, 1f
         )
         expect(inverse){ matrix.inverse() }
-        expect(Matrix4.identity()){ matrix * inverse }
+        expect(Matrix4.identity().copy(identity = false)){ matrix * inverse }
     }
 
 }
