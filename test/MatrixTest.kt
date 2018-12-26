@@ -8,22 +8,22 @@ class MatrixTest {
             1f, 0f, 0f,
             0f, 1f, 0f,
             0f, 0f, 1f
-    )){ Matrix3.identity() }
+    )){ Matrix3.identity }
 
     @Test fun translation3() =  expect(Matrix3(
             1f, 0f, 16f,
             0f, 1f, -2f,
             0f, 0f, 1f
-    )){ Matrix3.identity() translate Vector2(10f, -5f) translate Vector2(6f, 3f) }
+    )){ Matrix3.identity translate Vector2(10f, -5f) translate Vector2(6f, 3f) }
 
     @Test fun scale3() = expect(Matrix3(
             20f, 0f, 0f,
             0f, -0.5f, 0f,
             0f, 0f, 1f
-    )){ Matrix3.identity() scale Vector2(10f, -5f) scale Vector2(2f, 0.1f) }
+    )){ Matrix3.identity scale Vector2(10f, -5f) scale Vector2(2f, 0.1f) }
 
     @Test fun transform3() = expect(Vector2(1.5f, 14f)) {
-        (Matrix3.identity() scale Vector2(0.5f, 2f) translate Vector2(-2f, 4f)) * Vector2(5f, 3f)
+        (Matrix3.identity scale Vector2(0.5f, 2f) translate Vector2(-2f, 4f)) * Vector2(5f, 3f)
     }
 
     @Test fun transpose3() =  expect(Matrix3(
@@ -72,7 +72,7 @@ class MatrixTest {
                 5f, 6f, 0f
         )
         expect(inverse){ matrix.inverse() }
-        expect(Matrix3.identity()){ matrix * inverse }
+        expect(Matrix3.identity){ matrix * inverse }
     }
 
     @Test fun identity4() = expect(Matrix4(
@@ -81,25 +81,25 @@ class MatrixTest {
             0f, 0f, 1f, 0f,
             0f, 0f, 0f, 1f,
             identity = true
-    )){ Matrix4.identity() }
+    )){ Matrix4.identity }
 
     @Test fun translation4() =  expect(Matrix4(
             1f, 0f, 0f, 16f,
             0f, 1f, 0f, -2f,
             0f, 0f, 1f, 15f,
             0f, 0f, 0f, 1f
-    )){ Matrix4.identity() translate Vector3(10f, -5f, 10f) translate Vector3(6f, 3f, 5f) }
+    )){ Matrix4.identity translate Vector3(10f, -5f, 10f) translate Vector3(6f, 3f, 5f) }
 
     @Test fun scale4() = expect(Matrix4(
             20f, 0f, 0f, 0f,
             0f, -0.5f, 0f, 0f,
             0f, 0f, 10f, 0f,
             0f, 0f, 0f, 1f
-    )){ Matrix4.identity() scale Vector3(10f, -5f, -5f) scale Vector3(2f, 0.1f, -2f) }
+    )){ Matrix4.identity scale Vector3(10f, -5f, -5f) scale Vector3(2f, 0.1f, -2f) }
 
 
     @Test fun transform4() = expect(Vector3(1.5f, 14f, 15f)) {
-        (Matrix4.identity() scale Vector3(0.5f, 2f, 3f) translate Vector3(-2f, 4f, -5f)) * Vector3(5f, 3f, 10f)
+        (Matrix4.identity scale Vector3(0.5f, 2f, 3f) translate Vector3(-2f, 4f, -5f)) * Vector3(5f, 3f, 10f)
     }
 
     @Test fun transpose4() =  expect(Matrix4(
@@ -139,7 +139,7 @@ class MatrixTest {
                 1f, 0f, 2f, 1f
         )
         expect(inverse){ matrix.inverse() }
-        expect(Matrix4.identity().copy(identity = false)){ matrix * inverse }
+        expect(Matrix4.identity.copy(identity = false)){ matrix * inverse }
     }
 
 }

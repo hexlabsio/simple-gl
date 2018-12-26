@@ -2,29 +2,16 @@ package sgl
 
 import org.khronos.webgl.WebGLRenderingContext
 
-open class Object(val localVertices: List<Vertex3d>): Renderable{
-    var localPosition: Vector3 = Vector3(0f,0f,0f)
-    //var transformation: sgl.Matrix4 = sgl.Matrix4.identity()
-    private var dirty = true
-    private var cachedTransform: Matrix4 = Matrix4.identity()
-    var rotation: Matrix4 = Matrix4.identity()
-        set(value) {dirty = true; field = value}
-    var translation: Matrix4 = Matrix4.identity()
-        set(value) {dirty = true; field = value}
-    var scale: Matrix4 = Matrix4.identity()
-        set(value) {dirty = true; field = value}
-
-    fun transformation(): Matrix4{
-        if(dirty){
-            dirty = false
-            cachedTransform =  translation *  scale * rotation
-        }
-        return cachedTransform
-    }
-
-    fun position() = transformation() * localPosition
-    fun vertices(): List<Vertex3d> = localVertices.map { it.copy(position = transformation() * it.position) }
-    fun center() = transformation() * (localVertices.fold(Vector3(0f,0f,0f)) { acc, vertex -> acc + vertex.position } * (1f / localVertices.count()))
+open class Object(val localVertices: List<Vertex3d>, val transformation: Transform = Transform()): Renderable, Transformable{
+    var localPosition: Vector3 = Vector3.zero
+    override fun transform(vector: Vector3) = transformation.transform(vector)
+    override fun translate(translation: Vector3) = transformation.translate(translation)
+    override fun rotate(angle: Float, axis: Vector3) = transformation.rotate(angle, axis)
+    override fun rotate(about: Vector3, angle: Float, axis: Vector3) = transformation.rotate(about, angle, axis)
+    override fun scale(scale: Vector3) = transformation.scale(scale)
+    fun position() = transform(localPosition)
+    fun vertices(): List<Vertex3d> = localVertices.map { it.copy(position = transform(it.position)) }
+    fun center() = transform(localVertices.fold(Vector3(0f,0f,0f)) { acc, vertex -> acc + vertex.position } * (1f / localVertices.count()))
 
     open fun optimizedType() = WebGLRenderingContext.TRIANGLES
 

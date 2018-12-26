@@ -7,19 +7,19 @@ data class Matrix3(
         val a: Float, val b: Float, val c: Float,
         val d: Float, val e: Float, val f: Float,
         val g: Float, val h: Float, val i: Float
-): ArrayList<Float>(listOf(a, b, c, d, e, f, g, h ,i)){
+): ArrayList<Float>(listOf(a,d,g,b,e,h,c,f,i)){
     constructor(scale: Vector2, translation: Vector2): this(scale.x,0f,translation.x,0f,scale.y,translation.y,0f,0f,1f)
 
     val determinant: Float by lazy { a*(e*i-h*f)-b*(d*i-g*f)+c*(d*h-g*e) }
 
     companion object {
-        fun identity() = Matrix3(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
+        val identity = Matrix3(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f)
         @JsName("translation") fun translation(translation: Vector2) = Matrix3(1f, 0f, translation.x, 0f, 1f, translation.y, 0f, 0f, 1f)
         @JsName("scale") fun scale(scale: Vector2) = Matrix3(scale.x, 0f, 0f, 0f, scale.y, 0f, 0f, 0f, 1f)
     }
 }
 @JsName("Identity2d")
-fun Matrix3Identity() = Matrix3.identity()
+fun Matrix3Identity() = Matrix3.identity
 @JsName("Translation2d")
 fun Matrix3Translation(translation: Vector2) = Matrix3.translation(translation)
 @JsName("Scale2d")
@@ -34,7 +34,7 @@ fun Matrix3.adjugate() = transpose().let {
     )
     }
 
-fun Matrix3.inverse() = determinant.let { if(it != 0f) adjugate() / it else Matrix3.identity() }
+fun Matrix3.inverse() = determinant.let { if(it != 0f) adjugate() / it else Matrix3.identity }
 operator fun Matrix3.div(v: Float) = Matrix3(a / v, b / v, c / v, d / v, e / v, f / v, g / v, h / v, i / v)
 operator fun Matrix3.times(v: Vector2) = Vector2(x = a * v.x + b * v.y + c, y = d * v.x + e * v.y + f)
 operator fun Matrix3.times(m: Matrix3) = Matrix3(
@@ -50,7 +50,7 @@ data class Matrix4(
         val e: Float, val f: Float, val g: Float, val h: Float,
         val i: Float, val j: Float, val k: Float, val l: Float,
         val m: Float, val n: Float, val o: Float, val p: Float, val identity: Boolean = false
-): ArrayList<Float>(listOf(a, b, c, d, e, f, g, h ,i, j, k, l, m, n, o, p)){
+): ArrayList<Float>(listOf(a, e, i, m, b, f, j, n, c, g, k, o, d, h, l, p)){
 
     val determinant: Float by lazy {
         (a * f * k * p) + (a * g * l * n) + (a * h * j * o) +
@@ -85,7 +85,7 @@ data class Matrix4(
             ((a * f * k) + (b * g * i) + (c * e * j) - (a * g * j) - (b * e * k) - (c * f * i)) / determinant
     )
     companion object {
-        fun identity() = Matrix4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, true)
+        val identity = Matrix4(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, true)
         fun translation(translation: Vector3) = Matrix4(1f, 0f, 0f, translation.x, 0f, 1f, 0f, translation.y, 0f, 0f, 1f, translation.z, 0f, 0f, 0f, 1f)
         fun scale(scale: Vector3) = Matrix4(scale.x, 0f, 0f, 0f, 0f, scale.y, 0f, 0f, 0f, 0f, scale.z, 0f, 0f, 0f, 0f, 1f)
     }

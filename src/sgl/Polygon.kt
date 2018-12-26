@@ -9,7 +9,7 @@ open class Polygon(val sides: Int, val radius: Float, val startDirection: Vector
     override fun optimizedType() = WebGLRenderingContext.TRIANGLE_FAN
     private fun inFront(v: Vector3) = v.copy(z = v.z - 0.001f)
     override fun border() = with(vertices()){ Lines(subList(1,size).map { it.copy(color = Color(0f,0f,0f,1f)) }) }
-    fun transformedRadius() = (scale*rotation * Vector3(0f,1f,0f)).y
+    fun transformedRadius() = transform(Vector3(0f,1f,0f)).y - transformation.translationVector.y
     companion object {
         fun verticesFor(sides: Int, radius: Float, startDirection: Vector3 = Vector3(1f, 0f, 0f)): List<Vertex3d>{
             val angle = -(2.0 * PI / sides).toFloat()
