@@ -2,6 +2,12 @@ package sgl
 
 import org.khronos.webgl.WebGLRenderingContext
 
+open class Group(val objects: List<Object>): Renderable{
+    override fun render(program: Program) {
+        objects.forEach { it.render(program) }
+    }
+}
+
 open class Object(val localVertices: List<Vertex3d>, val transformation: Transform = Transform()): Renderable, Transformable{
     var localPosition: Vector3 = Vector3.zero
     override fun transform(vector: Vector3) = transformation.transform(vector)

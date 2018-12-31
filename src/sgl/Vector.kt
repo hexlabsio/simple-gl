@@ -1,5 +1,6 @@
 package sgl
 import kotlin.math.abs
+import kotlin.math.acos
 import kotlin.math.sqrt
 
 typealias Color = Vector4
@@ -73,6 +74,9 @@ data class Vector3(val x: Float, val y: Float, val z: Float): Vector {
         val X = Vector3(1f,0f,0f).apply { _unit = true }
         val Y = Vector3(0f,1f,0f).apply { _unit = true }
         val Z = Vector3(0f,0f,2f).apply { _unit = true }
+        fun angleBetween(a: Vector3, b: Vector3): Float{
+            return acos((a.dot(b))/a.length()*b.length())
+        }
     }
 }
 

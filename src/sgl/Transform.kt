@@ -17,7 +17,7 @@ open class Transform: Transformable{
             }
             return field
         }
-    var dirty = false
+    var dirty = true
     var translationVector = Vector3.zero
         set(value) { dirty = true; field = value }
     var scaleVector = vectorOf(1f,1f,1f)
@@ -34,7 +34,8 @@ open class Transform: Transformable{
         rotation *= Quaternion.from(angle, axis)
     }
     override fun rotate(about: Vector3, angle: Float, axis: Vector3) {
-        transformations *= Matrix4.translation(about) * Quaternion.from(angle, axis).transformation() * Matrix4.translation(about*-1f)
+        val localPosition = translationVector + about
+        transformations *= Matrix4.translation(localPosition*-1f) * Quaternion.from(angle, axis).transformation() * Matrix4.translation(localPosition)
     }
     override fun scale(scale: Vector3){
         scaleVector *= scale
@@ -44,12 +45,9 @@ open class Transform: Transformable{
     operator fun invoke(vector: Vector3) = transform(vector)
 }
 
-class InverseTransform: Transform(){
-    var inverseMatrix: Matrix4 = Matrix4.identity
-        get() {
-            if(dirty) inverseMatrix = matrix.inverse()
-            return field
-        }
+open class InverseTransform: Transform(){
+    var inverseMatrix: Matrix4 = matrix.inverse()
+        get() = matrix.inverse()
 
     override fun transform(vector: Vector3) = inverseMatrix * vector
 }
